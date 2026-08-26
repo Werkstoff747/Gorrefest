@@ -21,9 +21,9 @@
             --text-muted: #778da9;
             --accent-color: #415a77;
             --accent-hover: #778da9;
-            --header-bg: #a3cef1;
+            --header-bg: linear-gradient(to bottom, #1b263b, #0d1b2a); /* Cabecera oscura restaurada */
             --header-border: #415a77;
-            --logo-filter: none;
+            --logo-filter: invert(1) brightness(1.8); /* Logo blanco para modo oscuro */
             --img-bg: #0d1b2a;
             --warning-bg: rgba(224, 225, 221, 0.08);
             --warning-text: #8b8c89;
@@ -35,16 +35,16 @@
 
         body.light-mode {
             /* Modo Claro con la nueva paleta de colores especificada */
-            --bg-color: #e7ecef;
+            --bg-color: #e7ecef;        /* Fondo general claro */
             --card-bg: #ffffff;
             --card-border: #6096ba;
             --text-color: #274c77;
             --text-muted: #8b8c89;
             --accent-color: #274c77;
             --accent-hover: #6096ba;
-            --header-bg: #a3cef1;
+            --header-bg: #a3cef1;      /* Cabecera clara solicitada */
             --header-border: #6096ba;
-            --logo-filter: none;
+            --logo-filter: none;       /* Logo original en modo claro */
             --img-bg: #f8f9fa;
             --warning-bg: #f1f3f5;
             --warning-text: #8b8c89;
