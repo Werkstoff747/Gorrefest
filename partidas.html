@@ -21,9 +21,9 @@
             --text-muted: #778da9;
             --accent-color: #415a77;
             --accent-hover: #778da9;
-            --header-bg: #415a77;            /* Cabecera actualizada a #415A77 */
+            --header-bg: #415a77;
             --header-border: #415a77;
-            --logo-filter: invert(1) brightness(1.8); /* Logo blanco para destacar sobre el fondo */
+            --logo-filter: invert(1) brightness(1.8);
             --img-bg: #0d1b2a;
             --warning-bg: rgba(224, 225, 221, 0.08);
             --warning-text: #8b8c89;
@@ -35,7 +35,7 @@
         }
 
         body.light-mode {
-            /* Modo Claro con la cabecera también en #415A77 */
+            /* Modo Claro con la cabecera en #415A77 */
             --bg-color: #e7ecef;
             --card-bg: #ffffff;
             --card-border: #6096ba;
@@ -43,9 +43,9 @@
             --text-muted: #8b8c89;
             --accent-color: #274c77;
             --accent-hover: #6096ba;
-            --header-bg: #415a77;            /* Cabecera actualizada a #415A77 */
+            --header-bg: #415a77;
             --header-border: #274c77;
-            --logo-filter: invert(1) brightness(1.8); /* Logo blanco para destacar sobre el fondo */
+            --logo-filter: invert(1) brightness(1.8);
             --img-bg: #f8f9fa;
             --warning-bg: #f1f3f5;
             --warning-text: #8b8c89;
@@ -95,30 +95,7 @@
             margin: 0;
             font-size: 1.6rem;
             letter-spacing: 0.5px;
-            color: #ffffff; /* Texto del header en blanco para que resalte perfectamente */
-        }
-
-        .btn-theme {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 2px solid var(--header-border);
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            transition: transform 0.2s, background-color 0.3s, color 0.3s;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-        }
-
-        .btn-theme:hover {
-            transform: scale(1.1);
+            color: #ffffff;
         }
 
         /* ==========================================
@@ -440,12 +417,10 @@
 </head>
 <body>
 
+    <!-- Cabecera limpia sin el botón de tema -->
     <header>
         <img src="images/gorre_l.png" alt="Gorre Logo" class="logo-header">
         <h1>Listado de Partidas</h1>
-        <button id="theme-toggle" class="btn-theme theme-toggle-btn" title="Cambiar modo claro/oscuro">
-            <i class="fa-solid fa-moon"></i>
-        </button>
     </header>
 
     <div class="controls-container">
@@ -460,14 +435,16 @@
         </div>
     </main>
 
-    <!-- BOTONES FLOTANTES INFERIORES -->
+    <!-- BOTONES FLOTANTES INFERIORES CON ICONOS FONTAWESOME -->
     <div class="floating-btn-container">
-        <a href="index.html" class="floating-action-btn" title="Volver al Inicio">🏠</a>
-        <button class="floating-action-btn" onclick="history.back()" title="Volver atrás">◁</button>
-        <button class="floating-action-btn theme-toggle-btn" title="Cambiar modo claro/oscuro">
-            <i class="fa-solid fa-moon"></i>
-        </button>
-        <button id="scrollTopBtn" class="scroll-top-btn" onclick="scrollToTop()" title="Subir arriba">▲</button>
+        <!-- Casa para volver al inicio -->
+        <a href="index.html" class="floating-action-btn" title="Volver al Inicio"><i class="fa-solid fa-house"></i></a>
+        <!-- Flecha hacia atrás -->
+        <button class="floating-action-btn" onclick="history.back()" title="Volver atrás"><i class="fa-solid fa-arrow-left"></i></button>
+        <!-- Botón de cambio de tema (Sol / Luna) -->
+        <button class="floating-action-btn theme-toggle-btn" title="Cambiar modo claro/oscuro"><i class="fa-solid fa-moon"></i></button>
+        <!-- Flecha hacia arriba para subir -->
+        <button id="scrollTopBtn" class="scroll-top-btn" onclick="scrollToTop()" title="Subir arriba"><i class="fa-solid fa-arrow-up"></i></button>
     </div>
 
     <script>
