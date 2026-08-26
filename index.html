@@ -13,35 +13,39 @@
     
     <style>
         :root {
-            /* Modo Oscuro */
-            --bg-color: #0f0f14;
-            --card-bg: #18191d;
-            --card-border: #2a2b32;
+            /* Modo Oscuro: Fondo #0f0f0f y tarjetas #1f1f1f */
+            --bg-color: #0f0f0f;
+            --card-bg: #1f1f1f;
+            --card-border: #2e2f38;
             --text-color: #e1e1e6;
             --text-muted: #94a3b8;
             --accent-color: #00f0ff;
             --accent-hover: #00b8c4;
-            --btn-text: #0f0f14;
-            --header-bg: linear-gradient(to bottom, #05203d, #0f0f14);
+            --header-bg: linear-gradient(to bottom, #05203d, #0f0f0f);
             --header-border: #1a4a82;
             --logo-filter: invert(1) brightness(2);
-            --img-bg: #111215;
+            --img-bg: #121316;
+            --warning-bg: rgba(248, 113, 113, 0.15);
+            --warning-text: #f87171;
+            --tag-bg: #2a2b32;
         }
 
         body.light-mode {
-            /* Modo Claro */
+            /* Modo Claro: Fondo #ccc4b6, tarjetas blancas y cabecera #c9ddf2 */
             --bg-color: #ccc4b6;
             --card-bg: #ffffff;
-            --card-border: #b5aba0;
+            --card-border: #d1c7b7;
             --text-color: #1e293b;
             --text-muted: #475569;
             --accent-color: #0284c7;
             --accent-hover: #0369a1;
-            --btn-text: #ffffff;
             --header-bg: #c9ddf2;
             --header-border: #a4c4e5;
             --logo-filter: none;
             --img-bg: #f1f5f9;
+            --warning-bg: #fee2e2;
+            --warning-text: #b91c1c; /* Letras rojo más oscuro y legible */
+            --tag-bg: #e2e8f0;
         }
 
         body {
@@ -158,7 +162,7 @@
 
         .filter-btn.active {
             background-color: var(--accent-color);
-            color: var(--btn-text);
+            color: #0f0f0f;
             border-color: var(--accent-color);
         }
 
@@ -218,20 +222,32 @@
             flex-grow: 1;
         }
 
-        .tags {
+        .header-tags {
             display: flex;
-            gap: 8px;
+            align-items: center;
+            justify-content: space-between;
             margin-bottom: 10px;
-            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .tag {
+        /* Sistema / Línea con mayor protagonismo visual */
+        .system-tag {
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background-color: var(--accent-color);
+            color: #0f0f0f;
+            font-weight: 700;
+            font-family: 'Cinzel', serif;
+        }
+
+        .genre-tag {
             font-size: 0.75rem;
             padding: 4px 8px;
             border-radius: 4px;
-            background-color: var(--card-border);
-            color: var(--text-color);
-            font-weight: 600;
+            background-color: var(--tag-bg);
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         .card-body h3 {
@@ -278,12 +294,13 @@
 
         .aviso {
             font-size: 0.8rem;
-            color: #f87171;
+            color: var(--warning-text);
             margin-bottom: 12px;
-            background: rgba(248, 113, 113, 0.1);
-            padding: 6px;
+            background: var(--warning-bg);
+            padding: 6px 10px;
             border-radius: 4px;
-            border-left: 3px solid #f87171;
+            border-left: 3px solid var(--warning-text);
+            font-weight: 500;
         }
 
         .meta {
@@ -296,19 +313,23 @@
             padding-top: 10px;
         }
 
-        .btn-jugar {
-            background-color: var(--accent-color);
-            color: var(--btn-text);
-            text-align: center;
-            padding: 10px;
-            border-radius: 6px;
+        /* Estilo Discord modificado: sin caja, enlace clicable con icono al lado */
+        .discord-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-color);
             text-decoration: none;
             font-weight: bold;
-            transition: background-color 0.3s;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            margin-top: auto;
+            padding-top: 5px;
         }
 
-        .btn-jugar:hover {
-            background-color: var(--accent-hover);
+        .discord-link:hover {
+            color: var(--accent-hover);
+            text-decoration: underline;
         }
 
         .loading, .no-results {
@@ -457,13 +478,14 @@
                         </div>
                     ` : ''}
                     <div class="card-body">
-                        <div class="tags">
-                            ${partida.linea ? `<span class="tag">${partida.linea}</span>` : ''}
-                            ${partida.genero ? `<span class="tag">${partida.genero}</span>` : ''}
+                        <div class="header-tags">
+                            ${partida.linea ? `<span class="system-tag">${partida.linea}</span>` : ''}
+                            ${partida.genero ? `<span class="genre-tag">${partida.genero}</span>` : ''}
                         </div>
                         <h3>${partida.titulo}</h3>
                         <div class="desc-container">
                             <p class="desc-text">${partida.descripcion}</p>
+                            <!-- El botón de + info solo aparecerá si el texto excede una longitud estimada para 5 líneas -->
                             ${partida.descripcion.length > 150 ? `<button class="btn-toggle-desc">+ info</button>` : ''}
                         </div>
                         ${partida.aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
@@ -471,7 +493,7 @@
                             <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
                             <span><i class="${claseCalendario}"></i> ${partida.sesiones || 'Partida única'}</span>
                         </div>
-                        ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="btn-jugar">Unirse a Discord</a>` : ''}
+                        ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="discord-link">Unirse a Discord <i class="fa-brands fa-discord"></i></a>` : ''}
                     </div>
                 `;
 
