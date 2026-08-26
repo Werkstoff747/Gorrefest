@@ -10,9 +10,8 @@ Dentro de la carpeta `images` del proyecto se encuentran los recursos gráficos 
 
 *   **`gorre.ico`**: El icono (favicon) que aparece en la pestaña del navegador.
 *   **`gorre.jpg`**: Imagen general de respaldo o de presentación del proyecto.
-*   **`gorre_l.png`**: Logotipo corporativo optimizado y diseñado para el **Modo Claro** (letras oscuras).
-*   **`gorre_l_b.png`**: Logotipo corporativo adaptado para el **Modo Oscuro** (letras blancas con la "O" destacada en el tono de acento favorito).
-
+*   **`gorre_l.png`**: Logotipo corporativo principal. Se muestra tal cual en el **Modo Claro** y el sistema CSS le aplica automáticamente un filtro para pasar las letras a blanco en el **Modo Oscuro**.
+  
 *(Nota: Las portadas individuales de cada aventura no se guardan en el repositorio, sino que se enlazan mediante una URL directa desde el Google Sheet).*
 
 ---
