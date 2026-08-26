@@ -13,7 +13,7 @@
     
     <style>
         :root {
-            /* Modo Oscuro: el fondo de Discord hereda el mismo color que el sistema */
+            /* Modo Oscuro con la cabecera en #415A77 */
             --bg-color: #0d1b2a;
             --card-bg: #1b263b;
             --card-border: #415a77;
@@ -21,21 +21,21 @@
             --text-muted: #778da9;
             --accent-color: #415a77;
             --accent-hover: #778da9;
-            --header-bg: #a3cef1;
+            --header-bg: #415a77;            /* Cabecera actualizada a #415A77 */
             --header-border: #415a77;
-            --logo-filter: none;
+            --logo-filter: invert(1) brightness(1.8); /* Logo blanco para destacar sobre el fondo */
             --img-bg: #0d1b2a;
             --warning-bg: rgba(224, 225, 221, 0.08);
             --warning-text: #8b8c89;
             --tag-bg: #0d1b2a;
-            --discord-bg: var(--accent-color); /* Hereda el color exacto del sistema */
+            --discord-bg: var(--accent-color);
             --discord-hover: #778da9;
-            --discord-text: #FFB703;         /* Texto naranja destacado */
+            --discord-text: #fb8500;
             --discord-hover-text: #ffffff;
         }
 
         body.light-mode {
-            /* Modo Claro con su paleta corporativa y botón sólido */
+            /* Modo Claro con la cabecera también en #415A77 */
             --bg-color: #e7ecef;
             --card-bg: #ffffff;
             --card-border: #6096ba;
@@ -43,9 +43,9 @@
             --text-muted: #8b8c89;
             --accent-color: #274c77;
             --accent-hover: #6096ba;
-            --header-bg: #a3cef1;
-            --header-border: #6096ba;
-            --logo-filter: none;
+            --header-bg: #415a77;            /* Cabecera actualizada a #415A77 */
+            --header-border: #274c77;
+            --logo-filter: invert(1) brightness(1.8); /* Logo blanco para destacar sobre el fondo */
             --img-bg: #f8f9fa;
             --warning-bg: #f1f3f5;
             --warning-text: #8b8c89;
@@ -95,6 +95,7 @@
             margin: 0;
             font-size: 1.6rem;
             letter-spacing: 0.5px;
+            color: #ffffff; /* Texto del header en blanco para que resalte perfectamente */
         }
 
         .btn-theme {
@@ -442,7 +443,7 @@
     <header>
         <img src="images/gorre_l.png" alt="Gorre Logo" class="logo-header">
         <h1>Listado de Partidas</h1>
-        <button id="theme-toggle" class="btn-theme" title="Cambiar modo claro/oscuro">
+        <button id="theme-toggle" class="btn-theme theme-toggle-btn" title="Cambiar modo claro/oscuro">
             <i class="fa-solid fa-moon"></i>
         </button>
     </header>
@@ -461,13 +462,16 @@
 
     <!-- BOTONES FLOTANTES INFERIORES -->
     <div class="floating-btn-container">
-        <a href="index_futuro.html" class="floating-action-btn" title="Volver al Inicio">🏠</a>
+        <a href="index.html" class="floating-action-btn" title="Volver al Inicio">🏠</a>
         <button class="floating-action-btn" onclick="history.back()" title="Volver atrás">◁</button>
+        <button class="floating-action-btn theme-toggle-btn" title="Cambiar modo claro/oscuro">
+            <i class="fa-solid fa-moon"></i>
+        </button>
         <button id="scrollTopBtn" class="scroll-top-btn" onclick="scrollToTop()" title="Subir arriba">▲</button>
     </div>
 
     <script>
-        const themeToggleBtn = document.getElementById("theme-toggle");
+        const themeToggleBtns = document.querySelectorAll(".theme-toggle-btn");
         
         function actualizarInterfaz() {
             const esClaro = document.body.classList.contains("light-mode");
@@ -481,16 +485,20 @@
                 }
             });
 
-            if (esClaro) {
-                themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
-            } else {
-                themeToggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
-            }
+            themeToggleBtns.forEach(btn => {
+                if (esClaro) {
+                    btn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+                } else {
+                    btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+                }
+            });
         }
 
-        themeToggleBtn.addEventListener("click", () => {
-            document.body.classList.toggle("light-mode");
-            actualizarInterfaz();
+        themeToggleBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.body.classList.toggle("light-mode");
+                actualizarInterfaz();
+            });
         });
 
         window.addEventListener("scroll", () => {
