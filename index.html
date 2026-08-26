@@ -6,8 +6,8 @@
     <title>Listado de Partidas - Gorre</title>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="images/gorre.ico">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Montserrat & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- FontAwesome para los iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -40,6 +40,7 @@
             --accent-hover: #1d4ed8;
             --header-bg: #c9ddf2;
             --header-border: #a4c4e5;
+            --logo-filter: none;
             --img-bg: #f1f5f9;
             --warning-bg: #fee2e2;
             --warning-text: #b91c1c;
@@ -79,10 +80,11 @@
         }
 
         h1 {
-            font-family: 'Cinzel', serif;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
             margin: 0;
-            font-size: 1.8rem;
-            letter-spacing: 1px;
+            font-size: 1.6rem;
+            letter-spacing: 0.5px;
         }
 
         .btn-theme {
@@ -98,9 +100,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            transition: transform 0.2s, background-color 0.3s;
+            font-size: 1.2rem;
+            transition: transform 0.2s, background-color 0.3s, color 0.3s;
             background-color: var(--bg-color);
+            color: var(--text-color);
         }
 
         .btn-theme:hover {
@@ -108,11 +111,11 @@
         }
 
         /* ==========================================
-           CONTROLES DE FILTRADO Y BUSCADOR
+           CONTROLES DE FILTRADO, BUSCADOR Y CONTADOR
            ========================================== */
         .controls-container {
             max-width: 1200px;
-            margin: 0 auto 25px auto;
+            margin: 0 auto 20px auto;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -161,6 +164,15 @@
             background-color: var(--accent-color);
             color: #ffffff;
             border-color: var(--accent-color);
+        }
+
+        .counter-results {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: -5px;
+            margin-bottom: 5px;
+            padding-left: 2px;
         }
 
         /* ==========================================
@@ -228,13 +240,14 @@
         }
 
         .system-tag {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             padding: 5px 10px;
             border-radius: 6px;
             background-color: var(--accent-color);
             color: #ffffff;
             font-weight: 700;
-            font-family: 'Cinzel', serif;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.3px;
         }
 
         .genre-tag {
@@ -247,9 +260,11 @@
         }
 
         .card-body h3 {
-            font-family: 'Cinzel', serif;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
             margin: 0 0 10px 0;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
+            letter-spacing: -0.2px;
         }
 
         .desc-container {
@@ -282,7 +297,7 @@
             font-size: 0.85rem;
             padding: 0;
             margin-top: 4px;
-            display: none; /* Oculto por defecto hasta que JS compruebe si es necesario */
+            display: none;
         }
 
         .btn-toggle-desc:hover {
@@ -342,10 +357,12 @@
 <body>
 
     <header>
-        <!-- Por defecto arranca con el logo de modo oscuro (gorre_l_b.png) -->
         <img src="images/gorre_l_b.png" alt="Gorre Logo" id="logo-img" class="logo-header">
         <h1>Listado de Partidas</h1>
-        <button id="theme-toggle" class="btn-theme" title="Cambiar modo claro/oscuro">🌙</button>
+        <!-- Botón con icono de FontAwesome por defecto (luna para cambiar a claro) -->
+        <button id="theme-toggle" class="btn-theme" title="Cambiar modo claro/oscuro">
+            <i class="fa-solid fa-moon"></i>
+        </button>
     </header>
 
     <div class="controls-container">
@@ -353,6 +370,7 @@
         <div id="filter-buttons" class="filter-buttons">
             <!-- Botones dinámicos -->
         </div>
+        <div id="counter-results" class="counter-results">Cargando...</div>
     </div>
 
     <main>
@@ -368,7 +386,6 @@
         function actualizarInterfaz() {
             const esClaro = document.body.classList.contains("light-mode");
             
-            // Cambiar iconos de calendario
             const iconosCalendario = document.querySelectorAll(".calendar-icon");
             iconosCalendario.forEach(el => {
                 if (esClaro) {
@@ -378,13 +395,14 @@
                 }
             });
 
-            // Cambiar logo según el modo
             if (esClaro) {
                 logoImg.src = "images/gorre_l.png";
-                themeToggleBtn.textContent = "☀️";
+                // En modo claro muestra el sol para indicar que puedes cambiar a oscuro
+                themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
             } else {
                 logoImg.src = "images/gorre_l_b.png";
-                themeToggleBtn.textContent = "🌙";
+                // En modo oscuro muestra la luna para indicar que puedes cambiar a claro
+                themeToggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
             }
         }
 
@@ -435,6 +453,7 @@
             } catch (error) {
                 console.error("Error al obtener las partidas:", error);
                 contenedor.innerHTML = "<p class='loading'>Hubo un error al cargar las partidas. Revisa la conexión o los permisos del Google Sheet.</p>";
+                document.getElementById("counter-results").textContent = "Error al cargar partidas";
             }
         }
 
@@ -462,9 +481,18 @@
 
         function renderizarPartidas(partidasAMostrar) {
             const contenedor = document.getElementById("contenedor-partidas");
+            const contadorDiv = document.getElementById("counter-results");
+            
             contenedor.innerHTML = "";
 
-            if (partidasAMostrar.length === 0) {
+            const total = partidasAMostrar.length;
+            if (total === 1) {
+                contadorDiv.textContent = "Mostrando 1 partida";
+            } else {
+                contadorDiv.textContent = `Mostrando ${total} partidas`;
+            }
+
+            if (total === 0) {
                 contenedor.innerHTML = "<p class='no-results'>No se ha encontrado ninguna partida con esos criterios.</p>";
                 return;
             }
@@ -510,7 +538,6 @@
                     </div>
                 `;
 
-                // Comprobación inteligente de altura para el botón de + info
                 setTimeout(() => {
                     const descText = tarjeta.querySelector('.desc-text');
                     const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
