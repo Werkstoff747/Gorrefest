@@ -23,13 +23,10 @@
             --accent-hover: #38bdf8;
             --header-bg: linear-gradient(to bottom, #05203d, #0f0f0f);
             --header-border: #1a4a82;
-            --logo-filter: invert(1) brightness(2);
             --img-bg: #121316;
             --warning-bg: rgba(248, 113, 113, 0.15);
             --warning-text: #f87171;
             --tag-bg: #2a2b32;
-            --landscape-opacity: 0.25; /* Silueta sutil en oscuro */
-            --landscape-filter: invert(1); /* Pasa la silueta negra a blanca para el modo oscuro */
         }
 
         body.light-mode {
@@ -43,13 +40,10 @@
             --accent-hover: #1d4ed8;
             --header-bg: #c9ddf2;
             --header-border: #a4c4e5;
-            --logo-filter: none;
             --img-bg: #f1f5f9;
             --warning-bg: #fee2e2;
             --warning-text: #b91c1c;
             --tag-bg: #e2e8f0;
-            --landscape-opacity: 0.18; /* Silueta sutil en claro */
-            --landscape-filter: none; /* Silueta negra original */
         }
 
         body {
@@ -61,14 +55,13 @@
             padding: 20px;
         }
 
-        /* Cabecera con el landscape.png integrado de fondo */
         header {
             max-width: 1200px;
             margin: 0 auto 20px auto;
             background: var(--header-bg);
             border: 2px solid var(--header-border);
             border-radius: 12px;
-            padding: 30px 20px 45px 20px; /* Un poco más de espacio abajo para que respire la silueta */
+            padding: 25px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -76,34 +69,13 @@
             position: relative;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: background 0.3s, border-color 0.3s;
-            overflow: hidden;
-        }
-
-        /* Capa de fondo para el landscape.png */
-        header::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 70px; /* Altura de la silueta en la cabecera */
-            background-image: url('images/landscape.png');
-            background-repeat: repeat-x;
-            background-position: bottom center;
-            background-size: contain;
-            opacity: var(--landscape-opacity);
-            filter: var(--landscape-filter);
-            pointer-events: none;
-            transition: opacity 0.3s, filter 0.3s;
         }
 
         .logo-header {
             height: 50px;
             width: auto;
             margin-bottom: 15px;
-            filter: var(--logo-filter);
-            transition: filter 0.3s;
-            z-index: 1;
+            transition: opacity 0.3s;
         }
 
         h1 {
@@ -111,7 +83,6 @@
             margin: 0;
             font-size: 1.8rem;
             letter-spacing: 1px;
-            z-index: 1;
         }
 
         .btn-theme {
@@ -130,7 +101,6 @@
             font-size: 1.4rem;
             transition: transform 0.2s, background-color 0.3s;
             background-color: var(--bg-color);
-            z-index: 2;
         }
 
         .btn-theme:hover {
@@ -312,6 +282,7 @@
             font-size: 0.85rem;
             padding: 0;
             margin-top: 4px;
+            display: none; /* Oculto por defecto hasta que JS compruebe si es necesario */
         }
 
         .btn-toggle-desc:hover {
@@ -339,7 +310,6 @@
             padding-top: 10px;
         }
 
-        /* Enlace a Discord centrado */
         .discord-link {
             display: flex;
             align-items: center;
@@ -372,7 +342,8 @@
 <body>
 
     <header>
-        <img src="images/gorre_l.png" alt="Gorre Logo" class="logo-header">
+        <!-- Por defecto arranca con el logo de modo oscuro (gorre_l_b.png) -->
+        <img src="images/gorre_l_b.png" alt="Gorre Logo" id="logo-img" class="logo-header">
         <h1>Listado de Partidas</h1>
         <button id="theme-toggle" class="btn-theme" title="Cambiar modo claro/oscuro">🌙</button>
     </header>
@@ -392,11 +363,13 @@
 
     <script>
         const themeToggleBtn = document.getElementById("theme-toggle");
+        const logoImg = document.getElementById("logo-img");
         
-        function actualizarIconos() {
+        function actualizarInterfaz() {
             const esClaro = document.body.classList.contains("light-mode");
-            const iconosCalendario = document.querySelectorAll(".calendar-icon");
             
+            // Cambiar iconos de calendario
+            const iconosCalendario = document.querySelectorAll(".calendar-icon");
             iconosCalendario.forEach(el => {
                 if (esClaro) {
                     el.className = "fa-solid fa-calendar calendar-icon";
@@ -404,16 +377,20 @@
                     el.className = "fa-regular fa-calendar calendar-icon";
                 }
             });
+
+            // Cambiar logo según el modo
+            if (esClaro) {
+                logoImg.src = "images/gorre_l.png";
+                themeToggleBtn.textContent = "☀️";
+            } else {
+                logoImg.src = "images/gorre_l_b.png";
+                themeToggleBtn.textContent = "🌙";
+            }
         }
 
         themeToggleBtn.addEventListener("click", () => {
             document.body.classList.toggle("light-mode");
-            if (document.body.classList.contains("light-mode")) {
-                themeToggleBtn.textContent = "☀️";
-            } else {
-                themeToggleBtn.textContent = "🌙";
-            }
-            actualizarIconos();
+            actualizarInterfaz();
         });
 
         let listaPartidas = [];
@@ -522,7 +499,7 @@
                         <h3>${partida.titulo}</h3>
                         <div class="desc-container">
                             <p class="desc-text">${partida.descripcion}</p>
-                            ${partida.descripcion.length > 150 ? `<button class="btn-toggle-desc">+ info</button>` : ''}
+                            <button class="btn-toggle-desc">+ info</button>
                         </div>
                         ${partida.aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
                         <div class="meta">
@@ -532,6 +509,17 @@
                         ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="discord-link">Unirse a Discord <i class="fa-brands fa-discord"></i></a>` : ''}
                     </div>
                 `;
+
+                // Comprobación inteligente de altura para el botón de + info
+                setTimeout(() => {
+                    const descText = tarjeta.querySelector('.desc-text');
+                    const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
+                    if (descText && btnToggle) {
+                        if (descText.scrollHeight > descText.clientHeight) {
+                            btnToggle.style.display = "inline-block";
+                        }
+                    }
+                }, 50);
 
                 const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
                 if (btnToggle) {
