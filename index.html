@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Partidas de Rol de tu Amigo</title>
-    <!-- Google Fonts para darle un toque rolero / moderno -->
+    <title>Partidas de Rol - Gorre</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/gorre.ico">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
@@ -22,6 +24,8 @@
             --border-color: #2e2e38;
             --font-main: 'Inter', sans-serif;
             --font-title: 'Inter', sans-serif;
+            /* Filtro para que el logo con letras negras se vea blanco en modo oscuro */
+            --logo-filter: invert(1) brightness(2);
         }
 
         /* Modo Claro: Fantasía Clásica (Pergamino) */
@@ -35,6 +39,8 @@
             --border-color: #d3c5b4;
             --font-main: 'Inter', sans-serif;
             --font-title: 'Cinzel', serif;
+            /* Sin filtro en modo claro porque las letras ya son negras */
+            --logo-filter: none;
         }
 
         /* ==========================================
@@ -59,10 +65,25 @@
             padding-bottom: 15px;
         }
 
-        h1 {
-            font-family: var(--font-title);
-            margin: 0;
-            font-size: 1.8rem;
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-small {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-color);
+        }
+
+        .logo-text {
+            height: 35px; /* Ajusta la altura de las letras de Gorre según prefieras */
+            width: auto;
+            filter: var(--logo-filter);
+            transition: filter 0.3s;
         }
 
         .btn-theme {
@@ -146,7 +167,6 @@
             color: var(--text-muted);
             margin-bottom: 15px;
             flex-grow: 1;
-            /* Limitar descripción a 3 líneas para que queden uniformes */
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -199,7 +219,12 @@
 <body>
 
     <header>
-        <h1>🎲 Partidas de Rol</h1>
+        <div class="logo-container">
+            <!-- Logo pequeño redondo (gorre.jpg) -->
+            <img src="images/gorre.jpg" alt="Logo Gorre" class="logo-small">
+            <!-- Logo con letras de Gorre (gorre_l.png) -->
+            <img src="images/gorre_l.png" alt="Gorre" class="logo-text">
+        </div>
         <button id="theme-toggle" class="btn-theme">📜 Modo Fantasía</button>
     </header>
 
@@ -223,7 +248,7 @@
 
         // Carga de datos del Google Sheet en formato TSV
         async function cargarPartidas() {
-            const url = "https://docs.google.com/spreadsheets/d/1hX6Y0wqFcoyBsIQXkgypgogijbrTSqZRJGRw5Lqh9Ek/export?format=tsv";
+            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTPdYPbgiZnzzdn_uUy7g0h4krVRmLznQaOeHekUXPLg0anbmHzss7GxQeqtwrweg7dKWBWZyDZgmnU/pub?output=tsv";
             const contenedor = document.getElementById("contenedor-partidas");
 
             try {
@@ -231,9 +256,8 @@
                 const texto = await respuesta.text();
                 
                 const filas = texto.split("\n");
-                contenedor.innerHTML = ""; // Limpiar mensaje de carga
+                contenedor.innerHTML = "";
 
-                // Empezamos en i = 1 para saltar la cabecera del Excel
                 for (let i = 1; i < filas.length; i++) {
                     if (!filas[i].trim()) continue;
                     
@@ -250,10 +274,8 @@
                     const linkDiscord = columnas[8] || "";
                     const publicar = columnas[9] ? columnas[9].trim().toLowerCase() : "";
 
-                    // Filtro opcional: Si la columna J dice "no", omitimos la partida
                     if (publicar === "no") continue;
 
-                    // Construir la tarjeta HTML
                     const tarjeta = document.createElement("div");
                     tarjeta.className = "card-partida";
                     tarjeta.innerHTML = `
