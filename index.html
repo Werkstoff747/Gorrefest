@@ -13,27 +13,27 @@
     
     <style>
         :root {
-            /* Modo Oscuro con la paleta de azules medianoche */
+            /* Modo Oscuro con la paleta de azules medianoche y pizarra */
             --bg-color: #0d1b2a;
             --text-color: #e0e1dd;
             --text-muted: #778da9;
             --accent-color: #415a77;
             --accent-hover: #778da9;
-            --logo-filter: none;
+            --logo-filter: invert(1) brightness(1.8);
             --card-bg: #1b263b;
             --card-border: #415a77;
         }
 
         body.light-mode {
-            /* Modo Claro con la nueva paleta de colores corporativa */
-            --bg-color: #e7ecef;        /* Fondo gris-azulado claro */
-            --text-color: #274c77;      /* Azul oscuro principal */
-            --text-muted: #8b8c89;      /* Gris neutro secundario */
-            --accent-color: #274c77;
-            --accent-hover: #6096ba;
-            --logo-filter: none;
-            --card-bg: #ffffff;
-            --card-border: #6096ba;
+            /* Modo Claro con la nueva paleta corporativa y fresca */
+            --bg-color: #e7ecef;       /* Fondo general gris-azulado claro */
+            --text-color: #274c77;     /* Azul oscuro corporativo principal */
+            --text-muted: #8b8c89;     /* Gris neutro secundario */
+            --accent-color: #274c77;   /* Color de acento principal */
+            --accent-hover: #6096ba;   /* Tono hover intermedio */
+            --logo-filter: none;       /* Logo en su color original */
+            --card-bg: #ffffff;        /* Tarjetas en blanco limpio */
+            --card-border: #6096ba;    /* Bordes con el azul intermedio */
         }
 
         body {
@@ -87,7 +87,7 @@
             gap: 25px;
         }
 
-        /* Logo adaptativo */
+        /* Logo adaptativo que ocupa gran parte de la anchura */
         .logo-welcome {
             width: 100%;
             max-width: 480px;
@@ -198,7 +198,7 @@
 
     <!-- Contenido principal de la portada -->
     <div class="welcome-container">
-        <!-- Logo principal -->
+        <!-- Logo principal adaptable -->
         <img src="images/gorre_l.png" alt="Gorre Logo" id="logo-img" class="logo-welcome">
         
         <!-- Texto de bienvenida -->
@@ -208,7 +208,7 @@
 
         <!-- Botones de navegación -->
         <div class="action-buttons">
-            <!-- Enlaza a la página de listado -->
+            <!-- Enlaza a la página de listado en dos columnas -->
             <a href="partidas.html" class="btn-primary-custom">
                 <i class="fa-solid fa-dice-d20"></i> Ver Listado de Partidas
             </a>
