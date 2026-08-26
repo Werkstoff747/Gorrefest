@@ -10,11 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* ==========================================
-           VARIABLES DE ESTILO Y COLORES
-           ========================================== */
         :root {
-            /* Modo Oscuro: Azul marino intenso (#05203d) */
             --bg-color: #031528;
             --card-bg: #05203d;
             --card-border: #0a386b;
@@ -27,7 +23,6 @@
             --logo-filter: invert(1) brightness(2);
         }
 
-        /* Modo Claro: Azul clarito (#c9ddf2) */
         body.light-mode {
             --bg-color: #e8f1fc;
             --card-bg: #c9ddf2;
@@ -41,9 +36,6 @@
             --logo-filter: none;
         }
 
-        /* ==========================================
-           ESTILOS GENERALES
-           ========================================== */
         body {
             background-color: var(--bg-color);
             color: var(--text-color);
@@ -84,7 +76,6 @@
             letter-spacing: 1px;
         }
 
-        /* Botón de cambio de tema (Sol / Luna) */
         .btn-theme {
             position: absolute;
             top: 20px;
@@ -107,9 +98,6 @@
             transform: scale(1.1);
         }
 
-        /* ==========================================
-           CONTENEDOR Y TARJETAS DE PARTIDAS
-           ========================================== */
         #contenedor-partidas {
             max-width: 1200px;
             margin: 0 auto;
@@ -133,7 +121,6 @@
             transform: translateY(-4px);
         }
 
-        /* Imagen reescalada para que no rompa la tarjeta */
         .card-img-container {
             width: 100%;
             height: 180px;
@@ -146,11 +133,6 @@
             height: 100%;
             object-fit: cover;
             object-position: center;
-            transition: transform 0.3s;
-        }
-
-        .card-img:hover {
-            transform: scale(1.03);
         }
 
         .card-body {
@@ -182,7 +164,6 @@
             font-size: 1.3rem;
         }
 
-        /* Estilos para descripción y botón + info */
         .desc-container {
             font-size: 0.9rem;
             color: var(--text-muted);
@@ -197,10 +178,8 @@
             overflow: hidden;
             text-overflow: ellipsis;
             margin: 0 0 5px 0;
-            transition: all 0.3s ease;
         }
 
-        /* Cuando la tarjeta está expandida */
         .card-partida.expanded .desc-text {
             display: block;
             -webkit-line-clamp: unset;
@@ -268,11 +247,8 @@
 <body>
 
     <header>
-        <!-- Logo superior -->
         <img src="images/gorre_l.png" alt="Gorre Logo" class="logo-header">
-        <!-- Título principal -->
         <h1>Listado de Partidas</h1>
-        <!-- Botón de cambio de tema (Sol / Luna) -->
         <button id="theme-toggle" class="btn-theme" title="Cambiar modo claro/oscuro">🌙</button>
     </header>
 
@@ -283,7 +259,6 @@
     </main>
 
     <script>
-        // Lógica del botón de cambio de tema (Sol ☀️ / Luna 🌙)
         const themeToggleBtn = document.getElementById("theme-toggle");
         themeToggleBtn.addEventListener("click", () => {
             document.body.classList.toggle("light-mode");
@@ -294,9 +269,9 @@
             }
         });
 
-        // Carga de datos del Google Sheet en formato TSV
         async function cargarPartidas() {
-            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTPdYPbgiZnzzdn_uUy7g0h4krVRmLznQaOeHekUXPLg0anbmHzss7GxQeqtwrweg7dKWBWZyDZgmnU/pub?output=tsv";
+            // URL corregida para descarga directa en TSV del Google Sheet actual
+            const url = "https://docs.google.com/spreadsheets/d/1hX6Y0wqFcoyBsIQXkgypgogijbrTSqZRJGRw5Lqh9Ek/export?format=tsv";
             const contenedor = document.getElementById("contenedor-partidas");
 
             try {
@@ -327,7 +302,6 @@
                     const tarjeta = document.createElement("div");
                     tarjeta.className = "card-partida";
                     
-                    // Estructura interna de la tarjeta
                     tarjeta.innerHTML = `
                         ${portada ? `
                             <div class="card-img-container">
@@ -353,7 +327,6 @@
                         </div>
                     `;
 
-                    // Funcionalidad del botón "+ info" / "- ver menos"
                     const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
                     if (btnToggle) {
                         btnToggle.addEventListener('click', () => {
