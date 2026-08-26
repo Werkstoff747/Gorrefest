@@ -417,7 +417,6 @@
 </head>
 <body>
 
-    <!-- Cabecera limpia sin el botón de tema -->
     <header>
         <img src="images/gorre_l.png" alt="Gorre Logo" class="logo-header">
         <h1>Listado de Partidas</h1>
@@ -435,15 +434,13 @@
         </div>
     </main>
 
-    <!-- BOTONES FLOTANTES INFERIORES CON ICONOS FONTAWESOME -->
+    <!-- BOTONES FLOTANTES INFERIORES ORDENADOS -->
     <div class="floating-btn-container">
-        <!-- Casa para volver al inicio -->
-        <a href="index.html" class="floating-action-btn" title="Volver al Inicio"><i class="fa-solid fa-house"></i></a>
-        <!-- Flecha hacia atrás -->
-        <button class="floating-action-btn" onclick="history.back()" title="Volver atrás"><i class="fa-solid fa-arrow-left"></i></button>
-        <!-- Botón de cambio de tema (Sol / Luna) -->
+        <!-- 1. Botón de cambio de tema (Modo Claro / Oscuro) arriba -->
         <button class="floating-action-btn theme-toggle-btn" title="Cambiar modo claro/oscuro"><i class="fa-solid fa-moon"></i></button>
-        <!-- Flecha hacia arriba para subir -->
+        <!-- 2. Botón de Home (Volver al Inicio) en medio -->
+        <a href="index.html" class="floating-action-btn" title="Volver al Inicio"><i class="fa-solid fa-house"></i></a>
+        <!-- 3. Botón de Subir Arriba abajo (aparece con scroll) -->
         <button id="scrollTopBtn" class="scroll-top-btn" onclick="scrollToTop()" title="Subir arriba"><i class="fa-solid fa-arrow-up"></i></button>
     </div>
 
