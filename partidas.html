@@ -13,7 +13,7 @@
     
     <style>
         :root {
-            /* Modo Oscuro con la paleta de azules medianoche y Discord en naranja oscuro */
+            /* Modo Oscuro con la paleta de azules medianoche y Discord en texto naranja transparente */
             --bg-color: #0d1b2a;
             --card-bg: #1b263b;
             --card-border: #415a77;
@@ -21,37 +21,39 @@
             --text-muted: #778da9;
             --accent-color: #415a77;
             --accent-hover: #778da9;
-            --header-bg: linear-gradient(to bottom, #1b263b, #0d1b2a); /* Cabecera oscura restaurada */
+            --header-bg: #a3cef1;
             --header-border: #415a77;
-            --logo-filter: invert(1) brightness(1.8); /* Logo blanco para modo oscuro */
+            --logo-filter: none;
             --img-bg: #0d1b2a;
             --warning-bg: rgba(224, 225, 221, 0.08);
             --warning-text: #8b8c89;
             --tag-bg: #0d1b2a;
-            --discord-bg: #fb8500;
-            --discord-hover: #ffb703;
-            --discord-text: #0d1b2a;
+            --discord-bg: transparent;       /* Caja transparente para el modo oscuro */
+            --discord-hover: transparent;    /* Sin fondo al pasar el ratón */
+            --discord-text: #fb8500;         /* Texto naranja destacado */
+            --discord-hover-text: #ffb703;   /* Naranja más vivo al pasar el ratón */
         }
 
         body.light-mode {
-            /* Modo Claro con la nueva paleta de colores especificada */
-            --bg-color: #e7ecef;        /* Fondo general claro */
+            /* Modo Claro con su paleta corporativa y botón sólido */
+            --bg-color: #e7ecef;
             --card-bg: #ffffff;
             --card-border: #6096ba;
             --text-color: #274c77;
             --text-muted: #8b8c89;
             --accent-color: #274c77;
             --accent-hover: #6096ba;
-            --header-bg: #a3cef1;      /* Cabecera clara solicitada */
+            --header-bg: #a3cef1;
             --header-border: #6096ba;
-            --logo-filter: none;       /* Logo original en modo claro */
+            --logo-filter: none;
             --img-bg: #f8f9fa;
             --warning-bg: #f1f3f5;
             --warning-text: #8b8c89;
             --tag-bg: #d7e3fc;
-            --discord-bg: #274c77;
+            --discord-bg: #274c77;           /* Botón sólido en modo claro */
             --discord-hover: #6096ba;
             --discord-text: #ffffff;
+            --discord-hover-text: #ffffff;
         }
 
         body {
@@ -337,6 +339,7 @@
             padding-top: 10px;
         }
 
+        /* Enlace de Discord adaptable (transparente en oscuro, sólido en claro) */
         .discord-link {
             display: flex;
             align-items: center;
@@ -350,18 +353,16 @@
             font-size: 0.9rem;
             padding: 10px 16px;
             border-radius: 6px;
-            transition: background-color 0.2s, transform 0.2s;
+            transition: all 0.2s ease;
             margin-top: auto;
             width: 100%;
             box-sizing: border-box;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
 
         .discord-link:hover {
             background-color: var(--discord-hover);
-            transform: translateY(-2px);
-            color: var(--discord-text);
-            text-decoration: none;
+            color: var(--discord-hover-text);
+            text-decoration: underline;
         }
 
         /* ==========================================
