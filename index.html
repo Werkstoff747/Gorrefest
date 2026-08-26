@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partidas de Rol de tu Amigo</title>
+    <!-- Google Fonts para darle un toque rolero / moderno -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           VARIABLES DE ESTILO (Urbano vs Fantasía)
+           ========================================== */
+        :root {
+            /* Modo por defecto: Oscuro Urbano */
+            --bg-color: #121214;
+            --card-bg: #1a1a1e;
+            --text-color: #e1e1e6;
+            --text-muted: #9c9ca2;
+            --accent-color: #00f0ff;
+            --accent-hover: #00b8c4;
+            --border-color: #2e2e38;
+            --font-main: 'Inter', sans-serif;
+            --font-title: 'Inter', sans-serif;
+        }
+
+        /* Modo Claro: Fantasía Clásica (Pergamino) */
+        body.light-mode {
+            --bg-color: #f4eee1;
+            --card-bg: #fffbf0;
+            --text-color: #2c221e;
+            --text-muted: #6b5b53;
+            --accent-color: #b8860b;
+            --accent-hover: #996f05;
+            --border-color: #d3c5b4;
+            --font-main: 'Inter', sans-serif;
+            --font-title: 'Cinzel', serif;
+        }
+
+        /* ==========================================
+           ESTILOS GENERALES
+           ========================================== */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            transition: background-color 0.3s, color 0.3s;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 30px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-family: var(--font-title);
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        .btn-theme {
+            background-color: var(--accent-color);
+            color: #121214;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-theme:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* ==========================================
+           CONTENEDOR Y TARJETAS DE PARTIDAS
+           ========================================== */
+        #contenedor-partidas {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card-partida {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
+        }
+
+        .card-partida:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background-color: var(--border-color);
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .card-body h3 {
+            font-family: var(--font-title);
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+        }
+
+        .desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            flex-grow: 1;
+            /* Limitar descripción a 3 líneas para que queden uniformes */
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .aviso {
+            font-size: 0.8rem;
+            color: #ff5555;
+            margin-bottom: 12px;
+            background: rgba(255, 85, 85, 0.1);
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+
+        .btn-jugar {
+            background-color: var(--accent-color);
+            color: #121214;
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-jugar:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .loading {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎲 Partidas de Rol</h1>
+        <button id="theme-toggle" class="btn-theme">📜 Modo Fantasía</button>
+    </header>
+
+    <main>
+        <div id="contenedor-partidas">
+            <div class="loading">Cargando partidas desde el santuario (Google Sheets)...</div>
+        </div>
+    </main>
+
+    <script>
+        // Lógica del botón de cambio de tema
+        const themeToggleBtn = document.getElementById("theme-toggle");
+        themeToggleBtn.addEventListener("click", () => {
+            document.body.classList.toggle("light-mode");
+            if (document.body.classList.contains("light-mode")) {
+                themeToggleBtn.textContent = "🏙️ Modo Urbano";
+            } else {
+                themeToggleBtn.textContent = "📜 Modo Fantasía";
+            }
+        });
+
+        // Carga de datos del Google Sheet en formato TSV
+        async function cargarPartidas() {
+            const url = "https://docs.google.com/spreadsheets/d/1hX6Y0wqFcoyBsIQXkgypgogijbrTSqZRJGRw5Lqh9Ek/export?format=tsv";
+            const contenedor = document.getElementById("contenedor-partidas");
+
+            try {
+                const respuesta = await fetch(url);
+                const texto = await respuesta.text();
+                
+                const filas = texto.split("\n");
+                contenedor.innerHTML = ""; // Limpiar mensaje de carga
+
+                // Empezamos en i = 1 para saltar la cabecera del Excel
+                for (let i = 1; i < filas.length; i++) {
+                    if (!filas[i].trim()) continue;
+                    
+                    const columnas = filas[i].split("\t");
+                    
+                    const titulo = columnas[0] || "";
+                    const linea = columnas[1] || "";
+                    const genero = columnas[2] || "";
+                    const descripcion = columnas[3] || "";
+                    const portada = columnas[4] || "";
+                    const aviso = columnas[5] || "";
+                    const jugadores = columnas[6] || "";
+                    const sesiones = columnas[7] || "";
+                    const linkDiscord = columnas[8] || "";
+                    const publicar = columnas[9] ? columnas[9].trim().toLowerCase() : "";
+
+                    // Filtro opcional: Si la columna J dice "no", omitimos la partida
+                    if (publicar === "no") continue;
+
+                    // Construir la tarjeta HTML
+                    const tarjeta = document.createElement("div");
+                    tarjeta.className = "card-partida";
+                    tarjeta.innerHTML = `
+                        ${portada ? `<img src="${portada}" alt="${titulo}" class="card-img" onerror="this.style.display='none'">` : ''}
+                        <div class="card-body">
+                            <div class="tags">
+                                ${linea ? `<span class="tag">${linea}</span>` : ''}
+                                ${genero ? `<span class="tag">${genero}</span>` : ''}
+                            </div>
+                            <h3>${titulo}</h3>
+                            <p class="desc">${descripcion}</p>
+                            ${aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${aviso}</div>` : ''}
+                            <div class="meta">
+                                <span>👥 ${jugadores ? jugadores + ' jugadores' : 'Plazas abiertas'}</span>
+                                <span>⏱️ ${sesiones || 'Partida única'}</span>
+                            </div>
+                            ${linkDiscord ? `<a href="${linkDiscord}" target="_blank" class="btn-jugar">Unirse a Discord</a>` : ''}
+                        </div>
+                    `;
+                    contenedor.appendChild(tarjeta);
+                }
+
+                if (contenedor.children.length === 0) {
+                    contenedor.innerHTML = "<p class='loading'>No hay partidas publicadas en este momento.</p>";
+                }
+
+            } catch (error) {
+                console.error("Error al obtener las partidas:", error);
+                contenedor.innerHTML = "<p class='loading'>Hubo un error al cargar las partidas. Revisa la conexión o los permisos del Google Sheet.</p>";
+            }
+        }
+
+        cargarPartidas();
+    </script>
+</body>
+</html>
