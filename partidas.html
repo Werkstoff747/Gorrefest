@@ -13,7 +13,7 @@
     
     <style>
         :root {
-            /* Modo Oscuro con la paleta de azules medianoche y Discord con el color del sistema (#415a77) */
+            /* Modo Oscuro: el fondo de Discord hereda el mismo color que el sistema */
             --bg-color: #0d1b2a;
             --card-bg: #1b263b;
             --card-border: #415a77;
@@ -28,10 +28,10 @@
             --warning-bg: rgba(224, 225, 221, 0.08);
             --warning-text: #8b8c89;
             --tag-bg: #0d1b2a;
-            --discord-bg: #415a77;           /* Fondo de la caja de Discord con el color del sistema */
-            --discord-hover: #778da9;        /* Tono al pasar el ratón por encima */
+            --discord-bg: var(--accent-color); /* Hereda el color exacto del sistema */
+            --discord-hover: #778da9;
             --discord-text: #fb8500;         /* Texto naranja destacado */
-            --discord-hover-text: #ffffff;   /* Texto blanco al pasar el ratón */
+            --discord-hover-text: #ffffff;
         }
 
         body.light-mode {
@@ -50,7 +50,7 @@
             --warning-bg: #f1f3f5;
             --warning-text: #8b8c89;
             --tag-bg: #d7e3fc;
-            --discord-bg: #274c77;           /* Botón sólido en modo claro */
+            --discord-bg: #274c77;
             --discord-hover: #6096ba;
             --discord-text: #ffffff;
             --discord-hover-text: #ffffff;
@@ -677,7 +677,7 @@
 
             const filtradas = listaPartidas.filter(partida => {
                 const coincideLinea = (lineaSeleccionada === "TODAS" || partida.linea === lineaSeleccionada);
-                const textoCompleto = `${partida.titulo} ${partida.linea} ${partida.gener0} ${partida.descripcion}`.toLowerCase();
+                const textoCompleto = `${partida.titulo} ${partida.linea} ${partida.genero} ${partida.descripcion}`.toLowerCase();
                 const coincideTexto = textoCompleto.includes(textoBusqueda);
 
                 return coincideLinea && coincideTexto;
