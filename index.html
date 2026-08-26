@@ -11,28 +11,30 @@
     
     <style>
         :root {
-            --bg-color: #031528;
-            --card-bg: #05203d;
-            --card-border: #0a386b;
+            /* Modo Oscuro: Fondo #0f0f14 y tarjetas #18191d */
+            --bg-color: #0f0f14;
+            --card-bg: #18191d;
+            --card-border: #2a2b32;
             --text-color: #e1e1e6;
             --text-muted: #94a3b8;
             --accent-color: #00f0ff;
             --accent-hover: #00b8c4;
-            --btn-text: #031528;
-            --header-bg: #05203d;
+            --btn-text: #0f0f14;
+            --header-bg: #18191d;
             --logo-filter: invert(1) brightness(2);
         }
 
         body.light-mode {
-            --bg-color: #e8f1fc;
-            --card-bg: #c9ddf2;
-            --card-border: #a4c4e5;
+            /* Modo Claro: Fondo #ccc4b6 y tarjetas blancas */
+            --bg-color: #ccc4b6;
+            --card-bg: #ffffff;
+            --card-border: #b5aba0;
             --text-color: #1e293b;
             --text-muted: #475569;
             --accent-color: #0284c7;
             --accent-hover: #0369a1;
             --btn-text: #ffffff;
-            --header-bg: #c9ddf2;
+            --header-bg: #ffffff;
             --logo-filter: none;
         }
 
@@ -270,7 +272,6 @@
         });
 
         async function cargarPartidas() {
-            // URL corregida para descarga directa en TSV del Google Sheet actual
             const url = "https://docs.google.com/spreadsheets/d/1hX6Y0wqFcoyBsIQXkgypgogijbrTSqZRJGRw5Lqh9Ek/export?format=tsv";
             const contenedor = document.getElementById("contenedor-partidas");
 
