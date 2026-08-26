@@ -13,7 +13,7 @@
     
     <style>
         :root {
-            /* Modo Oscuro con la paleta de azules medianoche y caja de Discord con el color de los tags (#0d1b2a) */
+            /* Modo Oscuro con la paleta de azules medianoche y Discord con el color del sistema (#415a77) */
             --bg-color: #0d1b2a;
             --card-bg: #1b263b;
             --card-border: #415a77;
@@ -21,17 +21,17 @@
             --text-muted: #778da9;
             --accent-color: #415a77;
             --accent-hover: #778da9;
-            --header-bg: #415A77;
+            --header-bg: #a3cef1;
             --header-border: #415a77;
             --logo-filter: none;
             --img-bg: #0d1b2a;
             --warning-bg: rgba(224, 225, 221, 0.08);
             --warning-text: #8b8c89;
             --tag-bg: #0d1b2a;
-            --discord-bg: #0d1b2a;           /* Fondo de la caja de Discord igual al de los tags */
-            --discord-hover: #415a77;        /* Tono al pasar el ratón por encima */
+            --discord-bg: #415a77;           /* Fondo de la caja de Discord con el color del sistema */
+            --discord-hover: #778da9;        /* Tono al pasar el ratón por encima */
             --discord-text: #fb8500;         /* Texto naranja destacado */
-            --discord-hover-text: #ffb703;   /* Naranja más vivo al pasar el ratón */
+            --discord-hover-text: #ffffff;   /* Texto blanco al pasar el ratón */
         }
 
         body.light-mode {
@@ -677,7 +677,7 @@
 
             const filtradas = listaPartidas.filter(partida => {
                 const coincideLinea = (lineaSeleccionada === "TODAS" || partida.linea === lineaSeleccionada);
-                const textoCompleto = `${partida.titulo} ${partida.linea} ${partida.genero} ${partida.descripcion}`.toLowerCase();
+                const textoCompleto = `${partida.titulo} ${partida.linea} ${partida.gener0} ${partida.descripcion}`.toLowerCase();
                 const coincideTexto = textoCompleto.includes(textoBusqueda);
 
                 return coincideLinea && coincideTexto;
