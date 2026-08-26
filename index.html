@@ -28,6 +28,8 @@
             --warning-bg: rgba(248, 113, 113, 0.15);
             --warning-text: #f87171;
             --tag-bg: #2a2b32;
+            --landscape-opacity: 0.25; /* Silueta sutil en oscuro */
+            --landscape-filter: invert(1); /* Pasa la silueta negra a blanca para el modo oscuro */
         }
 
         body.light-mode {
@@ -46,6 +48,8 @@
             --warning-bg: #fee2e2;
             --warning-text: #b91c1c;
             --tag-bg: #e2e8f0;
+            --landscape-opacity: 0.18; /* Silueta sutil en claro */
+            --landscape-filter: none; /* Silueta negra original */
         }
 
         body {
@@ -57,13 +61,14 @@
             padding: 20px;
         }
 
+        /* Cabecera con el landscape.png integrado de fondo */
         header {
             max-width: 1200px;
             margin: 0 auto 20px auto;
             background: var(--header-bg);
             border: 2px solid var(--header-border);
             border-radius: 12px;
-            padding: 25px 20px;
+            padding: 30px 20px 45px 20px; /* Un poco más de espacio abajo para que respire la silueta */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -71,6 +76,25 @@
             position: relative;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: background 0.3s, border-color 0.3s;
+            overflow: hidden;
+        }
+
+        /* Capa de fondo para el landscape.png */
+        header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px; /* Altura de la silueta en la cabecera */
+            background-image: url('images/landscape.png');
+            background-repeat: repeat-x;
+            background-position: bottom center;
+            background-size: contain;
+            opacity: var(--landscape-opacity);
+            filter: var(--landscape-filter);
+            pointer-events: none;
+            transition: opacity 0.3s, filter 0.3s;
         }
 
         .logo-header {
@@ -79,6 +103,7 @@
             margin-bottom: 15px;
             filter: var(--logo-filter);
             transition: filter 0.3s;
+            z-index: 1;
         }
 
         h1 {
@@ -86,6 +111,7 @@
             margin: 0;
             font-size: 1.8rem;
             letter-spacing: 1px;
+            z-index: 1;
         }
 
         .btn-theme {
@@ -104,6 +130,7 @@
             font-size: 1.4rem;
             transition: transform 0.2s, background-color 0.3s;
             background-color: var(--bg-color);
+            z-index: 2;
         }
 
         .btn-theme:hover {
@@ -312,7 +339,7 @@
             padding-top: 10px;
         }
 
-        /* Enlace a Discord centrado en la tarjeta */
+        /* Enlace a Discord centrado */
         .discord-link {
             display: flex;
             align-items: center;
