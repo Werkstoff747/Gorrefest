@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listado de Partidas - Gorre</title>
+    <title>Gorre - Partidas de Rol</title>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="images/gorre.ico">
     <!-- Google Fonts: Montserrat & Inter -->
@@ -13,39 +13,27 @@
     
     <style>
         :root {
-            /* Modo Oscuro */
-            --bg-color: #0f0f0f;
-            --card-bg: #1f1f1f;
-            --card-border: #2e2f38;
-            --text-color: #e1e1e6;
-            --text-muted: #94a3b8;
-            --accent-color: #0ea5e9;
-            --accent-hover: #38bdf8;
-            --header-bg: linear-gradient(to bottom, #05203d, #0f0f0f);
-            --header-border: #1a4a82;
-            --logo-filter: invert(1) brightness(2); /* Pasa las letras negras del logo a blanco en oscuro */
-            --img-bg: #121316;
-            --warning-bg: rgba(248, 113, 113, 0.15);
-            --warning-text: #f87171;
-            --tag-bg: #2a2b32;
+            /* Modo Oscuro con la paleta de azules medianoche */
+            --bg-color: #0d1b2a;
+            --text-color: #e0e1dd;
+            --text-muted: #778da9;
+            --accent-color: #415a77;
+            --accent-hover: #778da9;
+            --logo-filter: none;
+            --card-bg: #1b263b;
+            --card-border: #415a77;
         }
 
         body.light-mode {
-            /* Modo Claro */
-            --bg-color: #ccc4b6;
+            /* Modo Claro con la nueva paleta de colores corporativa */
+            --bg-color: #e7ecef;        /* Fondo gris-azulado claro */
+            --text-color: #274c77;      /* Azul oscuro principal */
+            --text-muted: #8b8c89;      /* Gris neutro secundario */
+            --accent-color: #274c77;
+            --accent-hover: #6096ba;
+            --logo-filter: none;
             --card-bg: #ffffff;
-            --card-border: #b5aba0;
-            --text-color: #1e293b;
-            --text-muted: #475569;
-            --accent-color: #2563eb;
-            --accent-hover: #1d4ed8;
-            --header-bg: #c9ddf2;
-            --header-border: #a4c4e5;
-            --logo-filter: none; /* Mantiene el logo original intacto */
-            --img-bg: #f1f5f9;
-            --warning-bg: #fee2e2;
-            --warning-text: #b91c1c;
-            --tag-bg: #e2e8f0;
+            --card-border: #6096ba;
         }
 
         body {
@@ -54,47 +42,21 @@
             font-family: 'Inter', sans-serif;
             transition: background-color 0.3s, color 0.3s;
             margin: 0;
-            padding: 20px;
-        }
-
-        header {
-            max-width: 1200px;
-            margin: 0 auto 20px auto;
-            background: var(--header-bg);
-            border: 2px solid var(--header-border);
-            border-radius: 12px;
-            padding: 25px 20px;
+            padding: 0;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background 0.3s, border-color 0.3s;
+            justify-content: center;
         }
 
-        .logo-header {
-            height: 50px;
-            width: auto;
-            margin-bottom: 15px;
-            filter: var(--logo-filter);
-            transition: filter 0.3s;
-        }
-
-        h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            margin: 0;
-            font-size: 1.6rem;
-            letter-spacing: 0.5px;
-        }
-
+        /* Botón de cambio de tema flotante en la esquina superior derecha */
         .btn-theme {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: 2px solid var(--header-border);
+            top: 25px;
+            right: 25px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
             border-radius: 50%;
             width: 45px;
             height: 45px;
@@ -103,299 +65,169 @@
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            transition: transform 0.2s, background-color 0.3s, color 0.3s;
-            background-color: var(--bg-color);
             color: var(--text-color);
+            transition: transform 0.2s, background-color 0.3s, color 0.3s, border-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .btn-theme:hover {
             transform: scale(1.1);
+            border-color: var(--accent-color);
         }
 
-        /* ==========================================
-           CONTROLES DE FILTRADO, BUSCADOR Y CONTADOR
-           ========================================== */
-        .controls-container {
-            max-width: 1200px;
-            margin: 0 auto 20px auto;
+        /* Contenedor central de bienvenida */
+        .welcome-container {
+            width: 90%;
+            max-width: 700px;
+            text-align: center;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            align-items: center;
+            gap: 25px;
         }
 
-        .search-input {
+        /* Logo adaptativo */
+        .logo-welcome {
             width: 100%;
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 2px solid var(--card-border);
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            font-size: 1rem;
-            box-sizing: border-box;
-            transition: border-color 0.3s;
+            max-width: 480px;
+            height: auto;
+            filter: var(--logo-filter);
+            transition: filter 0.3s;
+            margin-bottom: 10px;
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
-
-        .filter-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-color);
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
+        .welcome-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.2rem;
             font-weight: 600;
-            transition: all 0.2s;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin: 0;
+            max-width: 550px;
         }
 
-        .filter-btn:hover {
-            border-color: var(--accent-color);
+        /* Grupo de botones de llamada a la acción */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 15px;
+            width: 100%;
         }
 
-        .filter-btn.active {
+        .btn-primary-custom {
             background-color: var(--accent-color);
             color: #ffffff;
-            border-color: var(--accent-color);
-        }
-
-        .counter-results {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-weight: 500;
-            margin-top: -5px;
-            margin-bottom: 5px;
-            padding-left: 2px;
-        }
-
-        /* ==========================================
-           CONTENEDOR Y TARJETAS DE PARTIDAS
-           ========================================== */
-        #contenedor-partidas {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .card-partida {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
-        }
-
-        .card-partida:hover {
-            transform: translateY(-4px);
-        }
-
-        .card-img-container {
-            width: 100%;
-            height: 240px;
-            background-color: var(--img-bg);
-            overflow: hidden;
-            display: flex;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 14px 28px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid var(--card-border);
-            transition: background-color 0.3s;
-        }
-
-        .card-img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s;
-        }
-
-        .card-img:hover {
-            transform: scale(1.02);
-        }
-
-        .card-body {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .header-tags {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
             gap: 10px;
         }
 
-        .system-tag {
-            font-size: 0.85rem;
-            padding: 5px 10px;
-            border-radius: 6px;
-            background-color: var(--accent-color);
-            color: #ffffff;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: 0.3px;
+        .btn-primary-custom:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
         }
 
-        .genre-tag {
-            font-size: 0.75rem;
-            padding: 4px 8px;
-            border-radius: 4px;
-            background-color: var(--tag-bg);
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .card-body h3 {
+        .btn-secondary-custom {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
-            margin: 0 0 10px 0;
-            font-size: 1.2rem;
-            letter-spacing: -0.2px;
-        }
-
-        .desc-container {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-
-        .desc-text {
-            display: -webkit-box;
-            -webkit-line-clamp: 5;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin: 0 0 5px 0;
-        }
-
-        .card-partida.expanded .desc-text {
-            display: block;
-            -webkit-line-clamp: unset;
-        }
-
-        .btn-toggle-desc {
-            background: none;
-            border: none;
-            color: var(--accent-color);
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85rem;
-            padding: 0;
-            margin-top: 4px;
-            display: none;
-        }
-
-        .btn-toggle-desc:hover {
-            text-decoration: underline;
-        }
-
-        .aviso {
-            font-size: 0.8rem;
-            color: var(--warning-text);
-            margin-bottom: 12px;
-            background: var(--warning-bg);
-            padding: 6px 10px;
-            border-radius: 4px;
-            border-left: 3px solid var(--warning-text);
-            font-weight: 500;
-        }
-
-        .meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            border-top: 1px solid var(--card-border);
-            padding-top: 10px;
-        }
-
-        .discord-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            color: var(--accent-color);
+            font-size: 1rem;
+            padding: 14px 28px;
+            border-radius: 8px;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-            margin-top: auto;
-            padding-top: 5px;
-            width: 100%;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .discord-link:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
+        .btn-secondary-custom:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+            transform: translateY(-2px);
         }
 
-        .loading, .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            font-size: 1.2rem;
+        /* Footer sutil inferior */
+        footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            padding: 40px;
+        }
+
+        /* Ajustes responsive para móviles */
+        @media (max-width: 480px) {
+            .logo-welcome {
+                max-width: 320px;
+            }
+            .welcome-subtitle {
+                font-size: 1.05rem;
+            }
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+            .btn-primary-custom, .btn-secondary-custom {
+                width: 100%;
+                box-sizing: border-box;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <!-- Siempre usa gorre_l.png y CSS se encarga de cambiar las letras a blanco en modo oscuro -->
-        <img src="images/gorre_l.png" alt="Gorre Logo" class="logo-header">
-        <h1>Listado de Partidas</h1>
-        <button id="theme-toggle" class="btn-theme" title="Cambiar modo claro/oscuro">
-            <i class="fa-solid fa-moon"></i>
-        </button>
-    </header>
+    <!-- Botón superior derecho para cambiar de tema -->
+    <button id="theme-toggle" class="btn-theme" title="Cambiar modo claro/oscuro">
+        <i class="fa-solid fa-moon"></i>
+    </button>
 
-    <div class="controls-container">
-        <input type="text" id="search-input" class="search-input" placeholder="🔍 Buscar por nombre, sistema, género...">
-        <div id="filter-buttons" class="filter-buttons">
-            <!-- Botones dinámicos -->
+    <!-- Contenido principal de la portada -->
+    <div class="welcome-container">
+        <!-- Logo principal -->
+        <img src="images/gorre_l.png" alt="Gorre Logo" id="logo-img" class="logo-welcome">
+        
+        <!-- Texto de bienvenida -->
+        <p class="welcome-subtitle">
+            Bienvenido al archivo de crónicas. Explora las mesas abiertas, elige tu sistema y prepárate para la aventura. Si buscas un hueco en la partida, contacta directamente con nosotros.
+        </p>
+
+        <!-- Botones de navegación -->
+        <div class="action-buttons">
+            <!-- Enlaza a la página de listado -->
+            <a href="partidas.html" class="btn-primary-custom">
+                <i class="fa-solid fa-dice-d20"></i> Ver Listado de Partidas
+            </a>
+            <!-- Enlace directo a Discord -->
+            <a href="https://discord.gg/tu-enlace" target="_blank" class="btn-secondary-custom">
+                <i class="fa-brands fa-discord"></i> Unirse al Discord
+            </a>
         </div>
-        <div id="counter-results" class="counter-results">Cargando...</div>
     </div>
 
-    <main>
-        <div id="contenedor-partidas">
-            <div class="loading">Cargando partidas del Google Sheet...</div>
-        </div>
-    </main>
+    <footer>
+        Gorre Roleplaying Experience &copy; 2026
+    </footer>
 
     <script>
         const themeToggleBtn = document.getElementById("theme-toggle");
         
         function actualizarInterfaz() {
             const esClaro = document.body.classList.contains("light-mode");
-            
-            const iconosCalendario = document.querySelectorAll(".calendar-icon");
-            iconosCalendario.forEach(el => {
-                if (esClaro) {
-                    el.className = "fa-solid fa-calendar calendar-icon";
-                } else {
-                    el.className = "fa-regular fa-calendar calendar-icon";
-                }
-            });
-
             if (esClaro) {
                 themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
             } else {
@@ -407,191 +239,6 @@
             document.body.classList.toggle("light-mode");
             actualizarInterfaz();
         });
-
-        let listaPartidas = [];
-        let lineaSeleccionada = "TODAS";
-
-        async function cargarPartidas() {
-            const url = "https://docs.google.com/spreadsheets/d/1hX6Y0wqFcoyBsIQXkgypgogijbrTSqZRJGRw5Lqh9Ek/export?format=tsv";
-            const contenedor = document.getElementById("contenedor-partidas");
-
-            try {
-                const respuesta = await fetch(url);
-                const texto = await respuesta.text();
-                
-                const filas = texto.split("\n");
-                listaPartidas = [];
-
-                for (let i = 1; i < filas.length; i++) {
-                    if (!filas[i].trim()) continue;
-                    
-                    const columnas = filas[i].split("\t");
-                    
-                    const partida = {
-                        titulo: columnas[0] || "",
-                        linea: columnas[1] || "",
-                        genero: columnas[2] || "",
-                        descripcion: columnas[3] || "",
-                        portada: columnas[4] || "",
-                        aviso: columnas[5] || "",
-                        jugadores: columnas[6] || "",
-                        sesiones: columnas[7] || "",
-                        linkDiscord: columnas[8] || "",
-                        publicar: columnas[9] ? columnas[9].trim().toLowerCase() : ""
-                    };
-
-                    if (partida.publicar === "no") continue;
-                    listaPartidas.push(partida);
-                }
-
-                // Ordenación: 1º por Sistema (linea), 2º por Título (titulo)
-                listaPartidas.sort((a, b) => {
-                    const sistemaA = a.linea.toLowerCase();
-                    const sistemaB = b.linea.toLowerCase();
-                    if (sistemaA < sistemaB) return -1;
-                    if (sistemaA > sistemaB) return 1;
-
-                    const tituloA = a.titulo.toLowerCase();
-                    const tituloB = b.titulo.toLowerCase();
-                    if (tituloA < tituloB) return -1;
-                    if (tituloA > tituloB) return 1;
-                    return 0;
-                });
-
-                generarBotonesLinea();
-                renderizarPartidas(listaPartidas);
-
-            } catch (error) {
-                console.error("Error al obtener las partidas:", error);
-                contenedor.innerHTML = "<p class='loading'>Hubo un error al cargar las partidas. Revisa la conexión o los permisos del Google Sheet.</p>";
-                document.getElementById("counter-results").textContent = "Error al cargar partidas";
-            }
-        }
-
-        function generarBotonesLinea() {
-            const contenedorBotones = document.getElementById("filter-buttons");
-            const lineasUnicas = [...new Set(listaPartidas.map(p => p.linea).filter(l => l !== ""))];
-            
-            let htmlBotones = `<button class="filter-btn active" data-linea="TODAS">Todas</button>`;
-            lineasUnicas.forEach(linea => {
-                htmlBotones += `<button class="filter-btn" data-linea="${linea}">${linea}</button>`;
-            });
-
-            contenedorBotones.innerHTML = htmlBotones;
-
-            const botones = contenedorBotones.querySelectorAll(".filter-btn");
-            botones.forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    botones.forEach(b => b.classList.remove("active"));
-                    e.target.classList.add("active");
-                    lineaSeleccionada = e.target.getAttribute("data-linea");
-                    filtrarYRenderizar();
-                });
-            });
-        }
-
-        function renderizarPartidas(partidasAMostrar) {
-            const contenedor = document.getElementById("contenedor-partidas");
-            const contadorDiv = document.getElementById("counter-results");
-            
-            contenedor.innerHTML = "";
-
-            const total = partidasAMostrar.length;
-            if (total === 1) {
-                contadorDiv.textContent = "Mostrando 1 partida";
-            } else {
-                contadorDiv.textContent = `Mostrando ${total} partidas`;
-            }
-
-            if (total === 0) {
-                contenedor.innerHTML = "<p class='no-results'>No se ha encontrado ninguna partida con esos criterios.</p>";
-                return;
-            }
-
-            partidasAMostrar.forEach(partida => {
-                const tarjeta = document.createElement("div");
-                tarjeta.className = "card-partida";
-                
-                const esClaro = document.body.classList.contains("light-mode");
-                const claseCalendario = esClaro ? "fa-solid fa-calendar calendar-icon" : "fa-regular fa-calendar calendar-icon";
-
-                let textoSesiones = partida.sesiones.trim();
-                if (textoSesiones === "1" || textoSesiones.toLowerCase() === "1 sesiones") {
-                    textoSesiones = "One-Shot";
-                } else if (textoSesiones && !textoSesiones.toLowerCase().includes("sesiones") && !textoSesiones.toLowerCase().includes("one-shot")) {
-                    textoSesiones = textoSesiones + " sesiones";
-                } else if (!textoSesiones) {
-                    textoSesiones = "One-Shot";
-                }
-
-                tarjeta.innerHTML = `
-                    ${partida.portada ? `
-                        <div class="card-img-container">
-                            <img src="${partida.portada}" alt="${partida.titulo}" class="card-img" onerror="this.parentElement.style.display='none'">
-                        </div>
-                    ` : ''}
-                    <div class="card-body">
-                        <div class="header-tags">
-                            ${partida.linea ? `<span class="system-tag">${partida.linea}</span>` : ''}
-                            ${partida.genero ? `<span class="genre-tag">${partida.genero}</span>` : ''}
-                        </div>
-                        <h3>${partida.titulo}</h3>
-                        <div class="desc-container">
-                            <p class="desc-text">${partida.descripcion}</p>
-                            <button class="btn-toggle-desc">+ info</button>
-                        </div>
-                        ${partida.aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
-                        <div class="meta">
-                            <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
-                            <span><i class="${claseCalendario}"></i> ${textoSesiones}</span>
-                        </div>
-                        ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="discord-link">Unirse a Discord <i class="fa-brands fa-discord"></i></a>` : ''}
-                    </div>
-                `;
-
-                setTimeout(() => {
-                    const descText = tarjeta.querySelector('.desc-text');
-                    const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
-                    if (descText && btnToggle) {
-                        if (descText.scrollHeight > descText.clientHeight) {
-                            btnToggle.style.display = "inline-block";
-                        }
-                    }
-                }, 50);
-
-                const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
-                if (btnToggle) {
-                    btnToggle.addEventListener('click', () => {
-                        tarjeta.classList.toggle('expanded');
-                        if (tarjeta.classList.contains('expanded')) {
-                            btnToggle.textContent = "- ver menos";
-                        } else {
-                            btnToggle.textContent = "+ info";
-                        }
-                    });
-                }
-
-                contenedor.appendChild(tarjeta);
-            });
-        }
-
-        function filtrarYRenderizar() {
-            const textoBusqueda = document.getElementById("search-input").value.toLowerCase().trim();
-
-            const filtradas = listaPartidas.filter(partida => {
-                const coincideLinea = (lineaSeleccionada === "TODAS" || partida.linea === lineaSeleccionada);
-                const textoCompleto = `${partida.titulo} ${partida.linea} ${partida.genero} ${partida.descripcion}`.toLowerCase();
-                const coincideTexto = textoCompleto.includes(textoBusqueda);
-
-                return coincideLinea && coincideTexto;
-            });
-
-            renderizarPartidas(filtradas);
-        }
-
-        document.getElementById("search-input").addEventListener("input", filtrarYRenderizar);
-
-        cargarPartidas();
     </script>
 </body>
 </html>
