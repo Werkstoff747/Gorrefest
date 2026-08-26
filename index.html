@@ -11,31 +11,34 @@
     
     <style>
         :root {
-            /* Modo Oscuro: Fondo #0f0f14, Tarjetas y Cabecera #05203d */
+            /* Modo Oscuro */
             --bg-color: #0f0f14;
-            --card-bg: #05203d;
-            --card-border: #0a386b;
+            --card-bg: #18191d;
+            --card-border: #2a2b32;
             --text-color: #e1e1e6;
             --text-muted: #94a3b8;
             --accent-color: #00f0ff;
             --accent-hover: #00b8c4;
-            --btn-text: #031528;
-            --header-bg: #05203d;
+            --btn-text: #0f0f14;
+            /* Degradado en modo oscuro: de #05203d hacia negro (#0f0f14) */
+            --header-bg: linear-gradient(to bottom, #05203d, #0f0f14);
+            --header-border: #1a4a82;
             --logo-filter: invert(1) brightness(2);
-            --img-bg: #031528;
+            --img-bg: #111215;
         }
 
         body.light-mode {
-            /* Modo Claro: Fondo #ccc4b6, Tarjetas y Cabecera Blancas (#ffffff) */
+            /* Modo Claro: Cabecera con fondo #c9ddf2 */
             --bg-color: #ccc4b6;
             --card-bg: #ffffff;
-            --card-border: #d1c7b7;
+            --card-border: #b5aba0;
             --text-color: #1e293b;
             --text-muted: #475569;
             --accent-color: #0284c7;
             --accent-hover: #0369a1;
             --btn-text: #ffffff;
-            --header-bg: #ffffff;
+            --header-bg: #c9ddf2;
+            --header-border: #a4c4e5;
             --logo-filter: none;
             --img-bg: #f1f5f9;
         }
@@ -51,9 +54,9 @@
 
         header {
             max-width: 1200px;
-            margin: 0 auto 30px auto;
-            background-color: var(--header-bg);
-            border: 2px solid var(--card-border);
+            margin: 0 auto 20px auto;
+            background: var(--header-bg);
+            border: 2px solid var(--header-border);
             border-radius: 12px;
             padding: 25px 20px;
             display: flex;
@@ -62,7 +65,7 @@
             text-align: center;
             position: relative;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: background-color 0.3s, border-color 0.3s;
+            transition: background 0.3s, border-color 0.3s;
         }
 
         .logo-header {
@@ -85,7 +88,7 @@
             top: 20px;
             right: 20px;
             background: none;
-            border: 2px solid var(--card-border);
+            border: 2px solid var(--header-border);
             border-radius: 50%;
             width: 45px;
             height: 45px;
@@ -102,6 +105,65 @@
             transform: scale(1.1);
         }
 
+        /* ==========================================
+           CONTROLES DE FILTRADO Y BUSCADOR
+           ========================================== */
+        .controls-container {
+            max-width: 1200px;
+            margin: 0 auto 25px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 2px solid var(--card-border);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent-color);
+        }
+
+        .filter-btn.active {
+            background-color: var(--accent-color);
+            color: var(--btn-text);
+            border-color: var(--accent-color);
+        }
+
+        /* ==========================================
+           CONTENEDOR Y TARJETAS DE PARTIDAS
+           ========================================== */
         #contenedor-partidas {
             max-width: 1200px;
             margin: 0 auto;
@@ -248,7 +310,7 @@
             background-color: var(--accent-hover);
         }
 
-        .loading {
+        .loading, .no-results {
             grid-column: 1 / -1;
             text-align: center;
             font-size: 1.2rem;
@@ -264,6 +326,13 @@
         <h1>Listado de Partidas</h1>
         <button id="theme-toggle" class="btn-theme" title="Cambiar modo claro/oscuro">🌙</button>
     </header>
+
+    <div class="controls-container">
+        <input type="text" id="search-input" class="search-input" placeholder="🔍 Buscar por nombre, sistema, género...">
+        <div id="filter-buttons" class="filter-buttons">
+            <!-- Botones dinámicos -->
+        </div>
+    </div>
 
     <main>
         <div id="contenedor-partidas">
@@ -282,6 +351,9 @@
             }
         });
 
+        let listaPartidas = [];
+        let lineaSeleccionada = "TODAS";
+
         async function cargarPartidas() {
             const url = "https://docs.google.com/spreadsheets/d/1hX6Y0wqFcoyBsIQXkgypgogijbrTSqZRJGRw5Lqh9Ek/export?format=tsv";
             const contenedor = document.getElementById("contenedor-partidas");
@@ -291,78 +363,130 @@
                 const texto = await respuesta.text();
                 
                 const filas = texto.split("\n");
-                contenedor.innerHTML = "";
+                listaPartidas = [];
 
                 for (let i = 1; i < filas.length; i++) {
                     if (!filas[i].trim()) continue;
                     
                     const columnas = filas[i].split("\t");
                     
-                    const titulo = columnas[0] || "";
-                    const linea = columnas[1] || "";
-                    const genero = columnas[2] || "";
-                    const descripcion = columnas[3] || "";
-                    const portada = columnas[4] || "";
-                    const aviso = columnas[5] || "";
-                    const jugadores = columnas[6] || "";
-                    const sesiones = columnas[7] || "";
-                    const linkDiscord = columnas[8] || "";
-                    const publicar = columnas[9] ? columnas[9].trim().toLowerCase() : "";
+                    const partida = {
+                        titulo: columnas[0] || "",
+                        linea: columnas[1] || "",
+                        genero: columnas[2] || "",
+                        descripcion: columnas[3] || "",
+                        portada: columnas[4] || "",
+                        aviso: columnas[5] || "",
+                        jugadores: columnas[6] || "",
+                        sesiones: columnas[7] || "",
+                        linkDiscord: columnas[8] || "",
+                        publicar: columnas[9] ? columnas[9].trim().toLowerCase() : ""
+                    };
 
-                    if (publicar === "no") continue;
-
-                    const tarjeta = document.createElement("div");
-                    tarjeta.className = "card-partida";
-                    
-                    tarjeta.innerHTML = `
-                        ${portada ? `
-                            <div class="card-img-container">
-                                <img src="${portada}" alt="${titulo}" class="card-img" onerror="this.parentElement.style.display='none'">
-                            </div>
-                        ` : ''}
-                        <div class="card-body">
-                            <div class="tags">
-                                ${linea ? `<span class="tag">${linea}</span>` : ''}
-                                ${genero ? `<span class="tag">${genero}</span>` : ''}
-                            </div>
-                            <h3>${titulo}</h3>
-                            <div class="desc-container">
-                                <p class="desc-text">${descripcion}</p>
-                                ${descripcion.length > 90 ? `<button class="btn-toggle-desc">+ info</button>` : ''}
-                            </div>
-                            ${aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${aviso}</div>` : ''}
-                            <div class="meta">
-                                <span>👥 ${jugadores ? jugadores + ' jugadores' : 'Plazas abiertas'}</span>
-                                <span>⏱️ ${sesiones || 'Partida única'}</span>
-                            </div>
-                            ${linkDiscord ? `<a href="${linkDiscord}" target="_blank" class="btn-jugar">Unirse a Discord</a>` : ''}
-                        </div>
-                    `;
-
-                    const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
-                    if (btnToggle) {
-                        btnToggle.addEventListener('click', () => {
-                            tarjeta.classList.toggle('expanded');
-                            if (tarjeta.classList.contains('expanded')) {
-                                btnToggle.textContent = "- ver menos";
-                            } else {
-                                btnToggle.textContent = "+ info";
-                            }
-                        });
-                    }
-
-                    contenedor.appendChild(tarjeta);
+                    if (partida.publicar === "no") continue;
+                    listaPartidas.push(partida);
                 }
 
-                if (contenedor.children.length === 0) {
-                    contenedor.innerHTML = "<p class='loading'>No hay partidas publicadas en este momento.</p>";
-                }
+                generarBotonesLinea();
+                renderizarPartidas(listaPartidas);
 
             } catch (error) {
                 console.error("Error al obtener las partidas:", error);
                 contenedor.innerHTML = "<p class='loading'>Hubo un error al cargar las partidas. Revisa la conexión o los permisos del Google Sheet.</p>";
             }
         }
+
+        function generarBotonesLinea() {
+            const contenedorBotones = document.getElementById("filter-buttons");
+            const lineasUnicas = [...new Set(listaPartidas.map(p => p.linea).filter(l => l !== ""))];
+            
+            let htmlBotones = `<button class="filter-btn active" data-linea="TODAS">Todas</button>`;
+            lineasUnicas.forEach(linea => {
+                htmlBotones += `<button class="filter-btn" data-linea="${linea}">${linea}</button>`;
+            });
+
+            contenedorBotones.innerHTML = htmlBotones;
+
+            const botones = contenedorBotones.querySelectorAll(".filter-btn");
+            botones.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    botones.forEach(b => b.classList.remove("active"));
+                    e.target.classList.add("active");
+                    lineaSeleccionada = e.target.getAttribute("data-linea");
+                    filtrarYRenderizar();
+                });
+            });
+        }
+
+        function renderizarPartidas(partidasAMostrar) {
+            const contenedor = document.getElementById("contenedor-partidas");
+            contenedor.innerHTML = "";
+
+            if (partidasAMostrar.length === 0) {
+                contenedor.innerHTML = "<p class='no-results'>No se ha encontrado ninguna partida con esos criterios.</p>";
+                return;
+            }
+
+            partidasAMostrar.forEach(partida => {
+                const tarjeta = document.createElement("div");
+                tarjeta.className = "card-partida";
+                
+                tarjeta.innerHTML = `
+                    ${partida.portada ? `
+                        <div class="card-img-container">
+                            <img src="${partida.portada}" alt="${partida.titulo}" class="card-img" onerror="this.parentElement.style.display='none'">
+                        </div>
+                    ` : ''}
+                    <div class="card-body">
+                        <div class="tags">
+                            ${partida.linea ? `<span class="tag">${partida.linea}</span>` : ''}
+                            ${partida.genero ? `<span class="tag">${partida.genero}</span>` : ''}
+                        </div>
+                        <h3>${partida.titulo}</h3>
+                        <div class="desc-container">
+                            <p class="desc-text">${partida.descripcion}</p>
+                            ${partida.descripcion.length > 90 ? `<button class="btn-toggle-desc">+ info</button>` : ''}
+                        </div>
+                        ${partida.aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
+                        <div class="meta">
+                            <span>👥 ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
+                            <span>⏱️ ${partida.sesiones || 'Partida única'}</span>
+                        </div>
+                        ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="btn-jugar">Unirse a Discord</a>` : ''}
+                    </div>
+                `;
+
+                const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
+                if (btnToggle) {
+                    btnToggle.addEventListener('click', () => {
+                        tarjeta.classList.toggle('expanded');
+                        if (tarjeta.classList.contains('expanded')) {
+                            btnToggle.textContent = "- ver menos";
+                        } else {
+                            btnToggle.textContent = "+ info";
+                        }
+                    });
+                }
+
+                contenedor.appendChild(tarjeta);
+            });
+        }
+
+        function filtrarYRenderizar() {
+            const textoBusqueda = document.getElementById("search-input").value.toLowerCase().trim();
+
+            const filtradas = listaPartidas.filter(partida => {
+                const coincideLinea = (lineaSeleccionada === "TODAS" || partida.linea === lineaSeleccionada);
+                const textoCompleto = `${partida.titulo} ${partida.linea} ${partida.genero} ${partida.descripcion}`.toLowerCase();
+                const coincideTexto = textoCompleto.includes(textoBusqueda);
+
+                return coincideLinea && coincideTexto;
+            });
+
+            renderizarPartidas(filtradas);
+        }
+
+        document.getElementById("search-input").addEventListener("input", filtrarYRenderizar);
 
         cargarPartidas();
     </script>
