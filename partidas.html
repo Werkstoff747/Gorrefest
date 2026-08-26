@@ -13,39 +13,39 @@
     
     <style>
         :root {
-            /* Modo Oscuro */
-            --bg-color: #0f0f0f;
-            --card-bg: #1f1f1f;
-            --card-border: #2e2f38;
-            --text-color: #e1e1e6;
-            --text-muted: #94a3b8;
-            --accent-color: #0ea5e9;
-            --accent-hover: #38bdf8;
-            --header-bg: linear-gradient(to bottom, #05203d, #0f0f0f);
-            --header-border: #1a4a82;
-            --logo-filter: invert(1) brightness(2);
-            --img-bg: #121316;
-            --warning-bg: rgba(248, 113, 113, 0.15);
-            --warning-text: #f87171;
-            --tag-bg: #2a2b32;
+            /* Modo Oscuro con la paleta de azules medianoche y pizarra */
+            --bg-color: #0d1b2a;
+            --card-bg: #1b263b;
+            --card-border: #415a77;
+            --text-color: #e0e1dd;
+            --text-muted: #778da9;
+            --accent-color: #415a77;
+            --accent-hover: #778da9;
+            --header-bg: linear-gradient(to bottom, #1b263b, #0d1b2a);
+            --header-border: #415a77;
+            --logo-filter: invert(1) brightness(1.8);
+            --img-bg: #0d1b2a;
+            --warning-bg: rgba(224, 225, 221, 0.1);
+            --warning-text: #e0e1dd;
+            --tag-bg: #0d1b2a;
         }
 
         body.light-mode {
-            /* Modo Claro */
-            --bg-color: #ccc4b6;
+            /* Modo Claro con la paleta fresca y colorida */
+            --bg-color: #8ecae6;
             --card-bg: #ffffff;
-            --card-border: #b5aba0;
-            --text-color: #1e293b;
-            --text-muted: #475569;
-            --accent-color: #2563eb;
-            --accent-hover: #1d4ed8;
-            --header-bg: #c9ddf2;
-            --header-border: #a4c4e5;
+            --card-border: #219ebc;
+            --text-color: #023047;
+            --text-muted: #1d4e68;
+            --accent-color: #219ebc;
+            --accent-hover: #023047;
+            --header-bg: #219ebc;
+            --header-border: #023047;
             --logo-filter: none;
-            --img-bg: #f1f5f9;
-            --warning-bg: #fee2e2;
-            --warning-text: #b91c1c;
-            --tag-bg: #e2e8f0;
+            --img-bg: #f0f7f9;
+            --warning-bg: #ffb703;
+            --warning-text: #023047;
+            --tag-bg: #d9edf7;
         }
 
         body {
@@ -104,7 +104,7 @@
             justify-content: center;
             font-size: 1.2rem;
             transition: transform 0.2s, background-color 0.3s, color 0.3s;
-            background-color: var(--bg-color);
+            background-color: var(--card-bg);
             color: var(--text-color);
         }
 
@@ -184,7 +184,7 @@
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Exactamente 2 columnas */
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
 
@@ -193,7 +193,7 @@
             border: 1px solid var(--card-border);
             border-radius: 10px;
             overflow: hidden;
-            display: flex; /* Estructura horizontal: imagen izquierda, texto derecha */
+            display: flex;
             flex-direction: row; 
             transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.15);
@@ -204,8 +204,8 @@
         }
 
         .card-img-container {
-            width: 180px; /* Ancho fijo para la portada a la izquierda */
-            min-width: 180px;
+            width: 190px;
+            min-width: 190px;
             background-color: var(--img-bg);
             overflow: hidden;
             display: flex;
@@ -213,12 +213,14 @@
             justify-content: center;
             border-right: 1px solid var(--card-border);
             transition: background-color 0.3s;
+            padding: 8px;
+            box-sizing: border-box;
         }
 
         .card-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* Llena el espacio de la izquierda de forma limpia */
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* Respeta la imagen completa sin recortarla */
             transition: transform 0.3s;
         }
 
@@ -278,7 +280,7 @@
 
         .desc-text {
             display: -webkit-box;
-            -webkit-line-clamp: 4; /* Limitado a 4 líneas por el espacio horizontal */
+            -webkit-line-clamp: 4;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -355,7 +357,6 @@
             padding: 40px;
         }
 
-        /* Responsive para móviles: se pasa a 1 columna y diseño vertical si la pantalla es estrecha */
         @media (max-width: 768px) {
             #contenedor-partidas {
                 grid-template-columns: 1fr;
@@ -384,9 +385,7 @@
 
     <div class="controls-container">
         <input type="text" id="search-input" class="search-input" placeholder="🔍 Buscar por nombre, sistema, género...">
-        <div id="filter-buttons" class="filter-buttons">
-            <!-- Botones dinámicos -->
-        </div>
+        <div id="filter-buttons" class="filter-buttons"></div>
         <div id="counter-results" class="counter-results">Cargando...</div>
     </div>
 
@@ -478,7 +477,7 @@
 
             } catch (error) {
                 console.error("Error al obtener las partidas:", error);
-                contenedor.innerHTML = "<p class='loading'>Hubo al cargar las partidas. Revisa la conexión o los permisos del Google Sheet.</p>";
+                contenedor.innerHTML = "<p class='loading'>Hubo un error al cargar las partidas. Revisa la conexión o los permisos del Google Sheet.</p>";
                 document.getElementById("counter-results").textContent = "Error al cargar partidas";
             }
         }
