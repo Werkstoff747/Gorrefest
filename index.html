@@ -23,6 +23,7 @@
             --accent-hover: #38bdf8;
             --header-bg: linear-gradient(to bottom, #05203d, #0f0f0f);
             --header-border: #1a4a82;
+            --logo-filter: invert(1) brightness(2); /* Pasa las letras negras del logo a blanco en oscuro */
             --img-bg: #121316;
             --warning-bg: rgba(248, 113, 113, 0.15);
             --warning-text: #f87171;
@@ -40,7 +41,7 @@
             --accent-hover: #1d4ed8;
             --header-bg: #c9ddf2;
             --header-border: #a4c4e5;
-            --logo-filter: none;
+            --logo-filter: none; /* Mantiene el logo original intacto */
             --img-bg: #f1f5f9;
             --warning-bg: #fee2e2;
             --warning-text: #b91c1c;
@@ -76,7 +77,8 @@
             height: 50px;
             width: auto;
             margin-bottom: 15px;
-            transition: opacity 0.3s;
+            filter: var(--logo-filter);
+            transition: filter 0.3s;
         }
 
         h1 {
@@ -357,7 +359,8 @@
 <body>
 
     <header>
-        <img src="images/gorre_l_b.png" alt="Gorre Logo" id="logo-img" class="logo-header">
+        <!-- Siempre usa gorre_l.png y CSS se encarga de cambiar las letras a blanco en modo oscuro -->
+        <img src="images/gorre_l.png" alt="Gorre Logo" class="logo-header">
         <h1>Listado de Partidas</h1>
         <button id="theme-toggle" class="btn-theme" title="Cambiar modo claro/oscuro">
             <i class="fa-solid fa-moon"></i>
@@ -380,7 +383,6 @@
 
     <script>
         const themeToggleBtn = document.getElementById("theme-toggle");
-        const logoImg = document.getElementById("logo-img");
         
         function actualizarInterfaz() {
             const esClaro = document.body.classList.contains("light-mode");
@@ -395,10 +397,8 @@
             });
 
             if (esClaro) {
-                logoImg.src = "images/gorre_l.png";
                 themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
             } else {
-                logoImg.src = "images/gorre_l_b.png";
                 themeToggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
             }
         }
@@ -444,14 +444,13 @@
                     listaPartidas.push(partida);
                 }
 
-                // ORDENACIÓN: 1º por Sistema (linea), 2º por Título (titulo) de forma alfabética (ignorando mayúsculas)
+                // Ordenación: 1º por Sistema (linea), 2º por Título (titulo)
                 listaPartidas.sort((a, b) => {
                     const sistemaA = a.linea.toLowerCase();
                     const sistemaB = b.linea.toLowerCase();
                     if (sistemaA < sistemaB) return -1;
                     if (sistemaA > sistemaB) return 1;
 
-                    // Si el sistema es el mismo, ordena alfabéticamente por título
                     const tituloA = a.titulo.toLowerCase();
                     const tituloB = b.titulo.toLowerCase();
                     if (tituloA < tituloB) return -1;
