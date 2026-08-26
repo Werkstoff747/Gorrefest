@@ -13,7 +13,7 @@
     
     <style>
         :root {
-            /* Modo Oscuro con la paleta de azules medianoche y Discord en texto naranja transparente */
+            /* Modo Oscuro con la paleta de azules medianoche y caja de Discord con el color de los tags (#0d1b2a) */
             --bg-color: #0d1b2a;
             --card-bg: #1b263b;
             --card-border: #415a77;
@@ -28,8 +28,8 @@
             --warning-bg: rgba(224, 225, 221, 0.08);
             --warning-text: #8b8c89;
             --tag-bg: #0d1b2a;
-            --discord-bg: transparent;       /* Caja transparente para el modo oscuro */
-            --discord-hover: transparent;    /* Sin fondo al pasar el ratón */
+            --discord-bg: #0d1b2a;           /* Fondo de la caja de Discord igual al de los tags */
+            --discord-hover: #415a77;        /* Tono al pasar el ratón por encima */
             --discord-text: #fb8500;         /* Texto naranja destacado */
             --discord-hover-text: #ffb703;   /* Naranja más vivo al pasar el ratón */
         }
@@ -339,7 +339,7 @@
             padding-top: 10px;
         }
 
-        /* Enlace de Discord adaptable (transparente en oscuro, sólido en claro) */
+        /* Enlace de Discord adaptable */
         .discord-link {
             display: flex;
             align-items: center;
@@ -362,7 +362,7 @@
         .discord-link:hover {
             background-color: var(--discord-hover);
             color: var(--discord-hover-text);
-            text-decoration: underline;
+            text-decoration: none;
         }
 
         /* ==========================================
