@@ -13,14 +13,14 @@
     
     <style>
         :root {
-            /* Modo Oscuro: Fondo #0f0f0f y tarjetas #1f1f1f */
+            /* Modo Oscuro */
             --bg-color: #0f0f0f;
             --card-bg: #1f1f1f;
             --card-border: #2e2f38;
             --text-color: #e1e1e6;
             --text-muted: #94a3b8;
-            --accent-color: #00f0ff;
-            --accent-hover: #00b8c4;
+            --accent-color: #0ea5e9;
+            --accent-hover: #38bdf8;
             --header-bg: linear-gradient(to bottom, #05203d, #0f0f0f);
             --header-border: #1a4a82;
             --logo-filter: invert(1) brightness(2);
@@ -31,20 +31,20 @@
         }
 
         body.light-mode {
-            /* Modo Claro: Fondo #ccc4b6, tarjetas blancas y cabecera #c9ddf2 */
+            /* Modo Claro */
             --bg-color: #ccc4b6;
             --card-bg: #ffffff;
-            --card-border: #d1c7b7;
+            --card-border: #b5aba0;
             --text-color: #1e293b;
             --text-muted: #475569;
-            --accent-color: #0284c7;
-            --accent-hover: #0369a1;
+            --accent-color: #2563eb;
+            --accent-hover: #1d4ed8;
             --header-bg: #c9ddf2;
             --header-border: #a4c4e5;
             --logo-filter: none;
             --img-bg: #f1f5f9;
             --warning-bg: #fee2e2;
-            --warning-text: #b91c1c; /* Letras rojo más oscuro y legible */
+            --warning-text: #b91c1c;
             --tag-bg: #e2e8f0;
         }
 
@@ -162,7 +162,7 @@
 
         .filter-btn.active {
             background-color: var(--accent-color);
-            color: #0f0f0f;
+            color: #ffffff;
             border-color: var(--accent-color);
         }
 
@@ -230,13 +230,12 @@
             gap: 10px;
         }
 
-        /* Sistema / Línea con mayor protagonismo visual */
         .system-tag {
             font-size: 0.9rem;
             padding: 5px 10px;
             border-radius: 6px;
             background-color: var(--accent-color);
-            color: #0f0f0f;
+            color: #ffffff;
             font-weight: 700;
             font-family: 'Cinzel', serif;
         }
@@ -313,10 +312,11 @@
             padding-top: 10px;
         }
 
-        /* Estilo Discord modificado: sin caja, enlace clicable con icono al lado */
+        /* Enlace a Discord centrado en la tarjeta */
         .discord-link {
-            display: inline-flex;
+            display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             color: var(--accent-color);
             text-decoration: none;
@@ -325,6 +325,7 @@
             transition: color 0.3s;
             margin-top: auto;
             padding-top: 5px;
+            width: 100%;
         }
 
         .discord-link:hover {
@@ -471,6 +472,15 @@
                 const esClaro = document.body.classList.contains("light-mode");
                 const claseCalendario = esClaro ? "fa-solid fa-calendar calendar-icon" : "fa-regular fa-calendar calendar-icon";
 
+                let textoSesiones = partida.sesiones.trim();
+                if (textoSesiones === "1" || textoSesiones.toLowerCase() === "1 sesiones") {
+                    textoSesiones = "One-Shot";
+                } else if (textoSesiones && !textoSesiones.toLowerCase().includes("sesiones") && !textoSesiones.toLowerCase().includes("one-shot")) {
+                    textoSesiones = textoSesiones + " sesiones";
+                } else if (!textoSesiones) {
+                    textoSesiones = "One-Shot";
+                }
+
                 tarjeta.innerHTML = `
                     ${partida.portada ? `
                         <div class="card-img-container">
@@ -485,13 +495,12 @@
                         <h3>${partida.titulo}</h3>
                         <div class="desc-container">
                             <p class="desc-text">${partida.descripcion}</p>
-                            <!-- El botón de + info solo aparecerá si el texto excede una longitud estimada para 5 líneas -->
                             ${partida.descripcion.length > 150 ? `<button class="btn-toggle-desc">+ info</button>` : ''}
                         </div>
                         ${partida.aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
                         <div class="meta">
                             <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
-                            <span><i class="${claseCalendario}"></i> ${partida.sesiones || 'Partida única'}</span>
+                            <span><i class="${claseCalendario}"></i> ${textoSesiones}</span>
                         </div>
                         ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="discord-link">Unirse a Discord <i class="fa-brands fa-discord"></i></a>` : ''}
                     </div>
