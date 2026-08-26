@@ -8,6 +8,8 @@
     <link rel="icon" type="image/x-icon" href="images/gorre.ico">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
@@ -20,7 +22,6 @@
             --accent-color: #00f0ff;
             --accent-hover: #00b8c4;
             --btn-text: #0f0f14;
-            /* Degradado en modo oscuro: de #05203d hacia negro (#0f0f14) */
             --header-bg: linear-gradient(to bottom, #05203d, #0f0f14);
             --header-border: #1a4a82;
             --logo-filter: invert(1) brightness(2);
@@ -28,7 +29,7 @@
         }
 
         body.light-mode {
-            /* Modo Claro: Cabecera con fondo #c9ddf2 */
+            /* Modo Claro */
             --bg-color: #ccc4b6;
             --card-bg: #ffffff;
             --card-border: #b5aba0;
@@ -248,7 +249,7 @@
 
         .desc-text {
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 5;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -342,6 +343,20 @@
 
     <script>
         const themeToggleBtn = document.getElementById("theme-toggle");
+        
+        function actualizarIconos() {
+            const esClaro = document.body.classList.contains("light-mode");
+            const iconosCalendario = document.querySelectorAll(".calendar-icon");
+            
+            iconosCalendario.forEach(el => {
+                if (esClaro) {
+                    el.className = "fa-solid fa-calendar calendar-icon";
+                } else {
+                    el.className = "fa-regular fa-calendar calendar-icon";
+                }
+            });
+        }
+
         themeToggleBtn.addEventListener("click", () => {
             document.body.classList.toggle("light-mode");
             if (document.body.classList.contains("light-mode")) {
@@ -349,6 +364,7 @@
             } else {
                 themeToggleBtn.textContent = "🌙";
             }
+            actualizarIconos();
         });
 
         let listaPartidas = [];
@@ -431,6 +447,9 @@
                 const tarjeta = document.createElement("div");
                 tarjeta.className = "card-partida";
                 
+                const esClaro = document.body.classList.contains("light-mode");
+                const claseCalendario = esClaro ? "fa-solid fa-calendar calendar-icon" : "fa-regular fa-calendar calendar-icon";
+
                 tarjeta.innerHTML = `
                     ${partida.portada ? `
                         <div class="card-img-container">
@@ -445,12 +464,12 @@
                         <h3>${partida.titulo}</h3>
                         <div class="desc-container">
                             <p class="desc-text">${partida.descripcion}</p>
-                            ${partida.descripcion.length > 90 ? `<button class="btn-toggle-desc">+ info</button>` : ''}
+                            ${partida.descripcion.length > 150 ? `<button class="btn-toggle-desc">+ info</button>` : ''}
                         </div>
                         ${partida.aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
                         <div class="meta">
-                            <span>👥 ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
-                            <span>⏱️ ${partida.sesiones || 'Partida única'}</span>
+                            <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
+                            <span><i class="${claseCalendario}"></i> ${partida.sesiones || 'Partida única'}</span>
                         </div>
                         ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="btn-jugar">Unirse a Discord</a>` : ''}
                     </div>
