@@ -13,43 +13,45 @@
     
     <style>
         :root {
-
-            /* Modo Oscuro con la paleta de azules y el toque naranja para Discord */
-            --bg-color: #e7ecef;
+            /* Modo Oscuro con la paleta de azules medianoche y Discord en naranja oscuro */
+            --bg-color: #0d1b2a;
             --card-bg: #1b263b;
             --card-border: #415a77;
             --text-color: #e0e1dd;
             --text-muted: #778da9;
             --accent-color: #415a77;
             --accent-hover: #778da9;
-            --header-bg: linear-gradient(to bottom, #1b263b, #0d1b2a);
+            --header-bg: #a3cef1;
             --header-border: #415a77;
-            --logo-filter: invert(1) brightness(1.8);
+            --logo-filter: none;
             --img-bg: #0d1b2a;
             --warning-bg: rgba(224, 225, 221, 0.08);
             --warning-text: #8b8c89;
             --tag-bg: #0d1b2a;
-            --discord-bg: #fb8500;       /* Naranja oscuro solicitado para el modo oscuro */
-            --discord-hover: #ffb703;    /* Tono más vivo al pasar el ratón */
-            --discord-text: #0d1b2a;     /* Texto oscuro para que contraste perfectamente con el naranja */
-            }
+            --discord-bg: #fb8500;
+            --discord-hover: #ffb703;
+            --discord-text: #0d1b2a;
+        }
 
         body.light-mode {
-            /* Modo Claro con la paleta fresca y colorida */
-            --bg-color: #8ecae6;
+            /* Modo Claro con la nueva paleta de colores especificada */
+            --bg-color: #e7ecef;
             --card-bg: #ffffff;
-            --card-border: #219ebc;
-            --text-color: #023047;
-            --text-muted: #1d4e68;
-            --accent-color: #219ebc;
-            --accent-hover: #023047;
-            --header-bg: #219ebc;
-            --header-border: #023047;
+            --card-border: #6096ba;
+            --text-color: #274c77;
+            --text-muted: #8b8c89;
+            --accent-color: #274c77;
+            --accent-hover: #6096ba;
+            --header-bg: #a3cef1;
+            --header-border: #6096ba;
             --logo-filter: none;
-            --img-bg: #f0f7f9;
-            --warning-bg: #fdf0d5; /* Fondo suave menos agresivo */
-            --warning-text: #b5651d; /* Tono anaranjado/marrón cálido menos chillón */
-            --tag-bg: #d9edf7;
+            --img-bg: #f8f9fa;
+            --warning-bg: #f1f3f5;
+            --warning-text: #8b8c89;
+            --tag-bg: #d7e3fc;
+            --discord-bg: #274c77;
+            --discord-hover: #6096ba;
+            --discord-text: #ffffff;
         }
 
         body {
@@ -73,7 +75,7 @@
             align-items: center;
             text-align: center;
             position: relative;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
             transition: background 0.3s, border-color 0.3s;
         }
 
@@ -200,11 +202,12 @@
             display: flex;
             flex-direction: row; 
             transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.06);
         }
 
         .card-partida:hover {
             transform: translateY(-4px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
         .card-img-container {
@@ -239,7 +242,6 @@
             flex-grow: 1;
         }
 
-        /* 1. Título arriba */
         .card-body h3 {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
@@ -248,7 +250,6 @@
             letter-spacing: -0.2px;
         }
 
-        /* 2. Juego / Tags debajo del título */
         .header-tags {
             display: flex;
             align-items: center;
@@ -277,7 +278,6 @@
             font-weight: 500;
         }
 
-        /* 3. Descripción */
         .desc-container {
             font-size: 0.85rem;
             color: var(--text-muted);
@@ -315,19 +315,18 @@
             text-decoration: underline;
         }
 
-        /* 4. Aviso de contenido más sutil */
         .aviso {
             font-size: 0.75rem;
             color: var(--warning-text);
             margin-bottom: 12px;
             background: var(--warning-bg);
-            padding: 6px 10px;
+            padding: 5px 8px;
             border-radius: 4px;
-            border-left: 3px solid var(--warning-text);
-            font-weight: 500;
+            border-left: 2px solid var(--warning-text);
+            font-weight: 400;
+            opacity: 0.85;
         }
 
-        /* 5. Jugadores / Duración */
         .meta {
             display: flex;
             justify-content: space-between;
@@ -338,25 +337,79 @@
             padding-top: 10px;
         }
 
-        /* 6. Unirse a Discord al final */
         .discord-link {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            color: var(--accent-color);
+            gap: 10px;
+            background-color: var(--discord-bg);
+            color: var(--discord-text);
             text-decoration: none;
-            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
             font-size: 0.9rem;
-            transition: color 0.3s;
+            padding: 10px 16px;
+            border-radius: 6px;
+            transition: background-color 0.2s, transform 0.2s;
             margin-top: auto;
-            padding-top: 4px;
             width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         }
 
         .discord-link:hover {
-            color: var(--accent-hover);
-            text-decoration: underline;
+            background-color: var(--discord-hover);
+            transform: translateY(-2px);
+            color: var(--discord-text);
+            text-decoration: none;
+        }
+
+        /* ==========================================
+           BOTONES FLOTANTES INFERIORES
+           ========================================== */
+        .floating-btn-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        .floating-action-btn, .scroll-top-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+
+        .floating-action-btn:hover, .scroll-top-btn:hover {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .scroll-top-btn {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.2s, background-color 0.2s, color 0.2s;
+        }
+
+        .scroll-top-btn.show {
+            opacity: 1;
+            visibility: visible;
         }
 
         .loading, .no-results {
@@ -405,6 +458,13 @@
         </div>
     </main>
 
+    <!-- BOTONES FLOTANTES INFERIORES -->
+    <div class="floating-btn-container">
+        <a href="index_futuro.html" class="floating-action-btn" title="Volver al Inicio">🏠</a>
+        <button class="floating-action-btn" onclick="history.back()" title="Volver atrás">◁</button>
+        <button id="scrollTopBtn" class="scroll-top-btn" onclick="scrollToTop()" title="Subir arriba">▲</button>
+    </div>
+
     <script>
         const themeToggleBtn = document.getElementById("theme-toggle");
         
@@ -431,6 +491,19 @@
             document.body.classList.toggle("light-mode");
             actualizarInterfaz();
         });
+
+        window.addEventListener("scroll", () => {
+            const scrollTopBtn = document.getElementById("scrollTopBtn");
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add("show");
+            } else {
+                scrollTopBtn.classList.remove("show");
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         let listaPartidas = [];
         let lineaSeleccionada = "TODAS";
@@ -468,7 +541,6 @@
                     listaPartidas.push(partida);
                 }
 
-                // Ordenación: 1º por Sistema (linea), 2º por Título (titulo)
                 listaPartidas.sort((a, b) => {
                     const sistemaA = a.linea.toLowerCase();
                     const sistemaB = b.linea.toLowerCase();
@@ -548,8 +620,6 @@
                     textoSesiones = "One-Shot";
                 }
 
-                // ORDEN INTERNO REESTRUCTURADO:
-                // 1. Título -> 2. Juego/Tags -> 3. Descripción -> 4. Aviso de contenido -> 5. Jugadores/Duración -> 6. Discord
                 tarjeta.innerHTML = `
                     ${partida.portada ? `
                         <div class="card-img-container">
