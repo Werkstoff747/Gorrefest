@@ -269,7 +269,7 @@
 
         .desc-text {
             display: -webkit-box;
-            -webkit-line-clamp: 4;
+            -webkit-line-clamp: 5; /* Ampliado a 5 líneas para evitar cortes por 2 palabras */
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -630,7 +630,6 @@
                     </div>
                 `;
 
-                // Comprobación de altura con margen de tolerancia (evita falsos positivos por subpíxeles)
                 setTimeout(() => {
                     const descText = tarjeta.querySelector('.desc-text');
                     const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
