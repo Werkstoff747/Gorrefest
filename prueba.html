@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Gorrepoints - Gorre</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/gorre.ico">
+    <!-- Google Fonts: Montserrat & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #0d1b2a;
+            --card-bg: #1b263b;
+            --card-border: #415a77;
+            --text-color: #e0e1dd;
+            --text-muted: #778da9;
+            --accent-color: #415a77;
+            --header-bg: #415a77;
+            --header-text: #ffffff;
+        }
+
+        body.light-mode {
+            --bg-color: #e7ecef;
+            --card-bg: #ffffff;
+            --card-border: #6096ba;
+            --text-color: #274c77;
+            --text-muted: #8b8c89;
+            --accent-color: #274c77;
+            --header-bg: #8ecae6;
+            --header-text: #023047;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            max-width: 800px;
+            width: 100%;
+            background: var(--header-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--header-text);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .btn-theme {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            color: var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .test-container {
+            max-width: 800px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .test-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .test-info {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* Estilo para los gorrepoints */
+        .gorrepoints-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .gorrepoint-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        .score-number {
+            margin-left: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Banco de Pruebas: Gorrepoints ⭐</h1>
+        <button id="theme-toggle" class="btn-theme" title="Cambiar tema">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </header>
+
+    <div class="test-container" id="pruebas-lista">
+        <!-- Las tarjetas de prueba se inyectarán aquí mediante JS para demostrar la función -->
+    </div>
+
+    <script>
+        // Botón de cambio de tema
+        const themeToggleBtn = document.getElementById("theme-toggle");
+        themeToggleBtn.addEventListener("click", () => {
+            document.body.classList.toggle("light-mode");
+            const esClaro = document.body.classList.contains("light-mode");
+            themeToggleBtn.innerHTML = esClaro ? '<i class="fa-regular fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+        });
+
+        // Función para generar los iconos de Gorrepoints según la puntuación
+        function renderGorrePoints(puntuacion) {
+            let html = '<div class="gorrepoints-wrapper">';
+            
+            let enteros = Math.floor(puntuacion);
+            let tieneMedio = (puntuacion % 1) !== 0; // Detecta si tiene decimales (ej. 3.5)
+
+            // Pintar los enteros (uno_gp.png)
+            for (let i = 0; i < enteros; i++) {
+                html += `<img src="images/uno_gp.png" alt="1 punto" class="gorrepoint-img">`;
+            }
+
+            // Pintar el medio punto si aplica (medio_gp.png)
+            if (tieneMedio) {
+                html += `<img src="images/medio_gp.png" alt="0.5 puntos" class="gorrepoint-img">`;
+            }
+
+            html += `<span class="score-number">(${puntuacion})</span>`;
+            html += '</div>';
+            return html;
+        }
+
+        // Casos de prueba para verificar que funciona con distintos valores
+        const puntuacionesPrueba = [
+            { titulo: "Partida de Cthulhu (Experto)", nota: 5 },
+            { titulo: "Cazador: La Venganza (Intenso)", nota: 4.5 },
+            { titulo: "Aventuras en la Marca (One-Shot)", nota: 4 },
+            { titulo: "Partida rápida de prueba", nota: 3.5 },
+            { titulo: "Crónica de iniciación", nota: 2 }
+        ];
+
+        const contenedorPruebas = document.getElementById("pruebas-lista");
+
+        puntuacionesPrueba.forEach(test => {
+            const card = document.createElement("div");
+            card.className = "test-card";
+            card.innerHTML = `
+                <div class="test-info">${test.titulo}</div>
+                <div>${renderGorrePoints(test.nota)}</div>
+            `;
+            contenedorPruebas.appendChild(card);
+        });
+    </script>
+</body>
+</html>
