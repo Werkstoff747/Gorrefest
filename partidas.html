@@ -33,10 +33,11 @@
             --discord-hover: #778da9;
             --discord-text: #fb8500;
             --discord-hover-text: #ffffff;
+            --star-color: #ffb703; /* Color dorado para las estrellas */
         }
 
         body.light-mode {
-            /* Modo Claro con header #8ecae6 y texto #023047 */
+            /* Modo Claro */
             --bg-color: #e7ecef;
             --card-bg: #ffffff;
             --card-border: #6096ba;
@@ -56,6 +57,7 @@
             --discord-hover: #6096ba;
             --discord-text: #ffffff;
             --discord-hover-text: #ffffff;
+            --star-color: #fb8500; /* Naranja/dorado cálido para modo claro */
         }
 
         body {
@@ -101,7 +103,7 @@
         }
 
         /* ==========================================
-           CONTROLES DE FILTRADO Y BUSCADOR
+           CONTROLES DE FILTRADO, BUSCADOR Y TAGS
            ========================================== */
         .controls-container {
             max-width: 1200px;
@@ -111,8 +113,14 @@
             gap: 15px;
         }
 
+        .search-filter-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
         .search-input {
-            width: 100%;
+            flex-grow: 1;
             padding: 12px 16px;
             border-radius: 8px;
             border: 2px solid var(--card-border);
@@ -128,7 +136,28 @@
             border-color: var(--accent-color);
         }
 
-        .filter-buttons {
+        /* Botón de limpiar filtros con escoba */
+        .btn-clear {
+            background-color: var(--card-bg);
+            border: 2px solid var(--card-border);
+            color: var(--text-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-clear:hover {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: var(--accent-color);
+        }
+
+        .filter-buttons, .tag-buttons-container {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
@@ -154,6 +183,26 @@
             background-color: var(--accent-color);
             color: #ffffff;
             border-color: var(--accent-color);
+        }
+
+        /* Botón especial #tag */
+        .filter-btn.tag-toggle-btn {
+            background-color: var(--card-border);
+            color: #ffffff;
+        }
+
+        /* Contenedor secundario para los botones de tags (inicialmente oculto) */
+        .tag-buttons-container {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 10px;
+            border: 1px dashed var(--card-border);
+            border-radius: 8px;
+            margin-top: -5px;
+        }
+
+        .tag-buttons-container.show {
+            display: flex;
         }
 
         .counter-results {
@@ -192,18 +241,28 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
+        /* Columna izquierda: Portada + Estrellas de valoración debajo */
         .card-img-container {
             width: 190px;
             min-width: 190px;
             background-color: var(--img-bg);
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            border-right: 1px solid var(--card-border);
+            transition: background-color 0.3s;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .card-img-wrapper {
+            flex-grow: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-right: 1px solid var(--card-border);
-            transition: background-color 0.3s;
-            padding: 8px;
-            box-sizing: border-box;
+            overflow: hidden;
+            width: 100%;
         }
 
         .card-img {
@@ -215,6 +274,17 @@
 
         .card-img:hover {
             transform: scale(1.03);
+        }
+
+        /* Sistema de estrellas bajo la portada */
+        .dj-rating {
+            display: flex;
+            gap: 2px;
+            font-size: 0.85rem;
+            color: var(--star-color);
+            margin-top: 8px;
+            align-items: center;
+            justify-content: center;
         }
 
         .card-body {
@@ -232,12 +302,29 @@
             letter-spacing: -0.2px;
         }
 
+        /* Cabecera de tags: géneros a la izquierda, sistema arriba a la derecha */
         .header-tags {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 12px;
             gap: 10px;
+        }
+
+        .genre-tags-wrapper {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            flex-grow: 1;
+        }
+
+        .genre-tag {
+            font-size: 0.75rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background-color: var(--tag-bg);
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         .system-tag {
@@ -249,15 +336,7 @@
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             letter-spacing: 0.3px;
-        }
-
-        .genre-tag {
-            font-size: 0.75rem;
-            padding: 3px 6px;
-            border-radius: 4px;
-            background-color: var(--tag-bg);
-            color: var(--text-muted);
-            font-weight: 500;
+            white-space: nowrap;
         }
 
         .desc-container {
@@ -410,9 +489,16 @@
             }
             .card-img-container {
                 width: 100%;
-                height: 220px;
+                height: auto;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 15px;
                 border-right: none;
                 border-bottom: 1px solid var(--card-border);
+            }
+            .card-img-wrapper {
+                width: 140px;
+                height: 140px;
             }
         }
     </style>
@@ -425,8 +511,15 @@
     </header>
 
     <div class="controls-container">
-        <input type="text" id="search-input" class="search-input" placeholder="🔍 Buscar por nombre, sistema, género...">
+        <!-- Buscador y Botón de Limpieza con Escoba -->
+        <div class="search-filter-row">
+            <input type="text" id="search-input" class="search-input" placeholder="🔍 Buscar por nombre, sistema, género...">
+            <button id="btn-clear-filters" class="btn-clear" title="Limpiar filtros y búsqueda"><i class="fa-solid fa-broom"></i></button>
+        </div>
+        <!-- Botones de sistemas y el botón #tag -->
         <div id="filter-buttons" class="filter-buttons"></div>
+        <!-- Contenedor desplegable para los botones de tags -->
+        <div id="tag-buttons-container" class="tag-buttons-container"></div>
         <div id="counter-results" class="counter-results">Cargando...</div>
     </div>
 
@@ -490,22 +583,47 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Función auxiliar para convertir formato español DD-MM-YYYY a objeto Date de JS
+        // Función para parsear fecha española DD-MM-YYYY
         function parsearFechaEspanola(textoFecha) {
             if (!textoFecha) return null;
             const partes = textoFecha.trim().split(/[-/]/);
             if (partes.length !== 3) return null;
             
             const dia = parseInt(partes[0], 10);
-            const mes = parseInt(partes[1], 10) - 1; // Los meses en JS van de 0 a 11
+            const mes = parseInt(partes[1], 10) - 1;
             const anio = parseInt(partes[2], 10);
             
             const fecha = new Date(anio, mes, dia);
             return isNaN(fecha.getTime()) ? null : fecha;
         }
 
+        // Función para generar las estrellas de FontAwesome a partir de un número (ej: 4.5)
+        function renderEstrellas(notaTexto) {
+            if (!notaTexto) return '';
+            const nota = parseFloat(notaTexto.replace(',', '.'));
+            if (isNaN(nota) || nota <= 0) return '';
+
+            let html = '<div class="dj-rating" title="Valoración del Director: ' + nota + '">';
+            let completas = Math.floor(nota);
+            let media = (nota % 1) >= 0.5 ? true : false;
+            let vacias = 5 - completas - (media ? 1 : 0);
+
+            for (let i = 0; i < completas; i++) {
+                html += '<i class="fa-solid fa-star"></i>';
+            }
+            if (media) {
+                html += '<i class="fa-solid fa-star-half-stroke"></i>';
+            }
+            for (let i = 0; i < vacias; i++) {
+                html += '<i class="fa-regular fa-star"></i>';
+            }
+            html += '</div>';
+            return html;
+        }
+
         let listaPartidas = [];
         let lineaSeleccionada = "TODAS";
+        let tagSeleccionado = "TODOS";
 
         async function cargarPartidas() {
             const url = "https://docs.google.com/spreadsheets/d/1hX6Y0wqFcoyBsIQXkgypgogijbrTSqZRJGRw5Lqh9Ek/export?format=tsv";
@@ -533,22 +651,19 @@
                         jugadores: columnas[6] || "",
                         sesiones: columnas[7] || "",
                         linkDiscord: columnas[8] || "",
-                        publicarEn: columnas[9] ? columnas[9].trim() : "" // Columna J ("Publicar en" en formato DD-MM-AAAA)
+                        publicarEn: columnas[9] ? columnas[9].trim() : "",
+                        valoracionDJ: columnas[10] ? columnas[10].trim() : "" // Columna K para la nota del DJ
                     };
 
                     // VALIDACIÓN POR FECHA (Columna J - Formato DD-MM-AAAA)
-                    // 1. Si no hay fecha escrita, actúa como borrador y se oculta
                     if (!partida.publicarEn) continue;
-
-                    // 2. Parsear la fecha española
                     const fechaPublicacion = parsearFechaEspanola(partida.publicarEn);
-                    if (!fechaPublicacion) continue; // Si la fecha está mal escrita, se omite
+                    if (!fechaPublicacion) continue;
 
                     const hoy = new Date();
                     fechaPublicacion.setHours(0, 0, 0, 0);
                     hoy.setHours(0, 0, 0, 0);
 
-                    // 3. Si la fecha configurada es futura (mayor que hoy), la partida no se publica todavía
                     if (fechaPublicacion > hoy) continue;
 
                     listaPartidas.push(partida);
@@ -567,7 +682,7 @@
                     return 0;
                 });
 
-                generarBotonesLinea();
+                generarBotonesFiltros();
                 renderizarPartidas(listaPartidas);
 
             } catch (error) {
@@ -577,23 +692,66 @@
             }
         }
 
-        function generarBotonesLinea() {
+        function generarBotonesFiltros() {
             const contenedorBotones = document.getElementById("filter-buttons");
+            const contenedorTags = document.getElementById("tag-buttons-container");
+            
             const lineasUnicas = [...new Set(listaPartidas.map(p => p.linea).filter(l => l !== ""))];
             
+            // Extraer todos los tags únicos de la columna género (separados por espacios o hashtags)
+            let todosLosTags = [];
+            listaPartidas.forEach(p => {
+                if (p.genero) {
+                    const tagsPartida = p.genero.match(/#[\wáéíóú]+/g) || p.genero.split(/\s+/);
+                    tagsPartida.forEach(t => {
+                        let tagLimpio = t.trim();
+                        if (tagLimpio) {
+                            if (!tagLimpio.startsWith('#')) tagLimpio = '#' + tagLimpio;
+                            todosLosTags.push(tagLimpio);
+                        }
+                    });
+                }
+            });
+            const tagsUnicos = [...new Set(todosLosTags)];
+
+            // 1. HTML de botones de sistema + botón #tag al final
             let htmlBotones = `<button class="filter-btn active" data-linea="TODAS">Todas</button>`;
             lineasUnicas.forEach(linea => {
                 htmlBotones += `<button class="filter-btn" data-linea="${linea}">${linea}</button>`;
             });
-
+            htmlBotones += `<button class="filter-btn tag-toggle-btn" id="btn-toggle-tags"><i class="fa-solid fa-tags"></i> #tag</button>`;
             contenedorBotones.innerHTML = htmlBotones;
 
-            const botones = contenedorBotones.querySelectorAll(".filter-btn");
-            botones.forEach(btn => {
+            // 2. HTML de los botones de tags para la sub-caja
+            let htmlTags = `<button class="filter-btn tag-filter-btn active" data-tag="TODOS">Todos los tags</button>`;
+            tagsUnicos.forEach(tag => {
+                htmlTags += `<button class="filter-btn tag-filter-btn" data-tag="${tag}">${tag}</button>`;
+            });
+            contenedorTags.innerHTML = htmlTags;
+
+            // Evento para abrir/cerrar la botonera de tags
+            document.getElementById("btn-toggle-tags").addEventListener("click", () => {
+                contenedorTags.classList.toggle("show");
+            });
+
+            // Eventos de clic en botones de sistema
+            const botonesSistema = contenedorBotones.querySelectorAll(".filter-btn:not(#btn-toggle-tags)");
+            botonesSistema.forEach(btn => {
                 btn.addEventListener("click", (e) => {
-                    botones.forEach(b => b.classList.remove("active"));
+                    botonesSistema.forEach(b => b.classList.remove("active"));
                     e.target.classList.add("active");
                     lineaSeleccionada = e.target.getAttribute("data-linea");
+                    filtrarYRenderizar();
+                });
+            });
+
+            // Eventos de clic en botones de tags
+            const botonesTags = contenedorTags.querySelectorAll(".tag-filter-btn");
+            botonesTags.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    botonesTags.forEach(b => b.classList.remove("active"));
+                    e.target.classList.add("active");
+                    tagSeleccionado = e.target.getAttribute("data-tag");
                     filtrarYRenderizar();
                 });
             });
@@ -633,17 +791,33 @@
                     textoSesiones = "One-Shot";
                 }
 
+                // Generar los spans para los géneros/tags de la tarjeta
+                let htmlGeneros = '';
+                if (partida.genero) {
+                    const generosArray = partida.genero.split(/[\s,]+/);
+                    generosArray.forEach(g => {
+                        if(g.trim()) {
+                            let tag = g.trim();
+                            if(!tag.startsWith('#')) tag = '#' + tag;
+                            htmlGeneros += `<span class="genre-tag">${tag}</span>`;
+                        }
+                    });
+                }
+
                 tarjeta.innerHTML = `
-                    ${partida.portada ? `
-                        <div class="card-img-container">
-                            <img src="${partida.portada}" alt="${partida.titulo}" class="card-img" onerror="this.parentElement.style.display='none'">
+                    <div class="card-img-container">
+                        <div class="card-img-wrapper">
+                            ${partida.portada ? `<img src="${partida.portada}" alt="${partida.titulo}" class="card-img" onerror="this.parentElement.parentElement.style.display='none'">` : ''}
                         </div>
-                    ` : ''}
+                        ${renderEstrellas(partida.valoracionDJ)}
+                    </div>
                     <div class="card-body">
                         <h3>${partida.titulo}</h3>
                         <div class="header-tags">
+                            <div class="genre-tags-wrapper">
+                                ${htmlGeneros}
+                            </div>
                             ${partida.linea ? `<span class="system-tag">${partida.linea}</span>` : ''}
-                            ${partida.genero ? `<span class="genre-tag">${partida.genero}</span>` : ''}
                         </div>
                         <div class="desc-container">
                             <p class="desc-text">${partida.descripcion}</p>
@@ -684,25 +858,50 @@
             });
         }
 
-        function filtrarYResultatus() {
-            // function stub to prevent issues, uses filtrarYRenderizar below
-        }
-
         function filtrarYRenderizar() {
             const textoBusqueda = document.getElementById("search-input").value.toLowerCase().trim();
 
             const filtradas = listaPartidas.filter(partida => {
                 const coincideLinea = (lineaSeleccionada === "TODAS" || partida.linea === lineaSeleccionada);
+                
+                // Comprobar si coincide con el tag seleccionado
+                let coincideTag = true;
+                if (tagSeleccionado !== "TODOS") {
+                    coincideTag = partida.genero && partida.genero.toLowerCase().includes(tagSeleccionado.toLowerCase());
+                }
+
                 const textoCompleto = `${partida.titulo} ${partida.linea} ${partida.genero} ${partida.descripcion}`.toLowerCase();
                 const coincideTexto = textoCompleto.includes(textoBusqueda);
 
-                return coincideLinea && coincideTexto;
+                return coincideLinea && coincideTag && coincideTexto;
             });
 
             renderizarPartidas(filtradas);
         }
 
+        // Evento del buscador en tiempo real
         document.getElementById("search-input").addEventListener("input", filtrarYRenderizar);
+
+        // Evento del botón de limpieza (escoba)
+        document.getElementById("btn-clear-filters").addEventListener("click", () => {
+            document.getElementById("search-input").value = "";
+            lineaSeleccionada = "TODAS";
+            tagSeleccionado = "TODOS";
+            
+            // Restablecer botones activos visualmente
+            document.querySelectorAll("#filter-buttons .filter-btn").forEach(b => b.classList.remove("active"));
+            const btnTodas = document.querySelector("#filter-buttons [data-linea='TODAS']");
+            if (btnTodas) btnTodas.classList.add("active");
+
+            document.querySelectorAll(".tag-filter-btn").forEach(b => b.classList.remove("active"));
+            const btnTodosTags = document.querySelector(".tag-filter-btn[data-tag='TODOS']");
+            if (btnTodosTags) btnTodosTags.classList.add("active");
+
+            // Ocultar la botonera de tags al limpiar
+            document.getElementById("tag-buttons-container").classList.remove("show");
+
+            renderizarPartidas(listaPartidas);
+        });
 
         cargarPartidas();
     </script>
