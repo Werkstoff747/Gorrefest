@@ -269,7 +269,7 @@
 
         .desc-text {
             display: -webkit-box;
-            -webkit-line-clamp: 5; /* Ampliado a 5 líneas para evitar cortes por 2 palabras */
+            -webkit-line-clamp: 5;
             -webkit-box-orient: vertical;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -519,10 +519,24 @@
                         jugadores: columnas[6] || "",
                         sesiones: columnas[7] || "",
                         linkDiscord: columnas[8] || "",
-                        publicar: columnas[9] ? columnas[9].trim().toLowerCase() : ""
+                        publicarEn: columnas[9] ? columnas[9].trim() : "" // Columna J ("Publicar en")
                     };
 
-                    if (partida.publicar === "no") continue;
+                    // VALIDACIÓN POR FECHA (Columna J - "Publicar en")
+                    // 1. Si no tiene fecha puesta, se omite (actúa como borrador)
+                    if (!partida.publicarEn) continue;
+
+                    // 2. Comprobamos si la fecha de publicación ya ha llegado
+                    const fechaPublicacion = new Date(partida.publicarEn);
+                    const hoy = new Date();
+
+                    // Normalizar las horas a las 00:00 para comparar únicamente el día exacto
+                    fechaPublicacion.setHours(0, 0, 0, 0);
+                    hoy.setHours(0, 0, 0, 0);
+
+                    // Si la fecha configurada es futura (mayor que hoy), la partida todavía no se publica
+                    if (fechaPublicacion > hoy) continue;
+
                     listaPartidas.push(partida);
                 }
 
