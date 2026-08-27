@@ -490,6 +490,20 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Función auxiliar para convertir formato español DD-MM-YYYY a objeto Date de JS
+        function parsearFechaEspanola(textoFecha) {
+            if (!textoFecha) return null;
+            const partes = textoFecha.trim().split(/[-/]/);
+            if (partes.length !== 3) return null;
+            
+            const dia = parseInt(partes[0], 10);
+            const mes = parseInt(partes[1], 10) - 1; // Los meses en JS van de 0 a 11
+            const anio = parseInt(partes[2], 10);
+            
+            const fecha = new Date(anio, mes, dia);
+            return isNaN(fecha.getTime()) ? null : fecha;
+        }
+
         let listaPartidas = [];
         let lineaSeleccionada = "TODAS";
 
@@ -519,22 +533,22 @@
                         jugadores: columnas[6] || "",
                         sesiones: columnas[7] || "",
                         linkDiscord: columnas[8] || "",
-                        publicarEn: columnas[9] ? columnas[9].trim() : "" // Columna J ("Publicar en")
+                        publicarEn: columnas[9] ? columnas[9].trim() : "" // Columna J ("Publicar en" en formato DD-MM-AAAA)
                     };
 
-                    // VALIDACIÓN POR FECHA (Columna J - "Publicar en")
-                    // 1. Si no tiene fecha puesta, se omite (actúa como borrador)
+                    // VALIDACIÓN POR FECHA (Columna J - Formato DD-MM-AAAA)
+                    // 1. Si no hay fecha escrita, actúa como borrador y se oculta
                     if (!partida.publicarEn) continue;
 
-                    // 2. Comprobamos si la fecha de publicación ya ha llegado
-                    const fechaPublicacion = new Date(partida.publicarEn);
-                    const hoy = new Date();
+                    // 2. Parsear la fecha española
+                    const fechaPublicacion = parsearFechaEspanola(partida.publicarEn);
+                    if (!fechaPublicacion) continue; // Si la fecha está mal escrita, se omite
 
-                    // Normalizar las horas a las 00:00 para comparar únicamente el día exacto
+                    const hoy = new Date();
                     fechaPublicacion.setHours(0, 0, 0, 0);
                     hoy.setHours(0, 0, 0, 0);
 
-                    // Si la fecha configurada es futura (mayor que hoy), la partida todavía no se publica
+                    // 3. Si la fecha configurada es futura (mayor que hoy), la partida no se publica todavía
                     if (fechaPublicacion > hoy) continue;
 
                     listaPartidas.push(partida);
@@ -668,6 +682,10 @@
 
                 contenedor.appendChild(tarjeta);
             });
+        }
+
+        function filtrarYResultatus() {
+            // function stub to prevent issues, uses filtrarYRenderizar below
         }
 
         function filtrarYRenderizar() {
