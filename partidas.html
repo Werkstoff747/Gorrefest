@@ -196,7 +196,6 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
-        /* Columna izquierda: Solo la portada */
         .card-img-container {
             width: 190px;
             min-width: 190px;
@@ -612,8 +611,11 @@
             const selectLinea = document.getElementById("linea-select");
             const selectTag = document.getElementById("tag-select");
             
+            // Extraer líneas únicas y ordenarlas alfabéticamente
             const lineasUnicas = [...new Set(listaPartidas.map(p => p.linea).filter(l => l !== ""))];
+            lineasUnicas.sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
             
+            // Extraer tags únicos y ordenarlos alfabéticamente
             let todosLosTags = [];
             listaPartidas.forEach(p => {
                 if (p.genero) {
@@ -628,6 +630,7 @@
                 }
             });
             const tagsUnicos = [...new Set(todosLosTags)];
+            tagsUnicos.sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
 
             let htmlLineas = `<option value="TODAS">Todos los sistemas</option>`;
             lineasUnicas.forEach(linea => {
