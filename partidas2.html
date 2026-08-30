@@ -366,7 +366,7 @@
             margin: 0 0 4px 0;
         }
 
-        .card-partida.expanded .desc-text, .row-partida.expanded .desc-text {
+        .card-partida.expanded .desc-text {
             display: block;
             -webkit-line-clamp: unset;
         }
@@ -435,89 +435,110 @@
         }
 
         /* ==========================================
-           BLOQUE 2: LISTA COMPACTA (RESTO DE PARTIDAS) CON TODOS LOS DATOS Y + INFO
+           BLOQUE 2: LISTA COMPACTA (BARRA HORIZONTAL)
            ========================================== */
         #contenedor-lista {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
-        .row-partida {
+        .row-wrapper {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
             border-radius: 10px;
-            padding: 16px;
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
+            overflow: hidden;
             transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .row-partida:hover {
+        .row-wrapper:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .row-img-container {
-            width: 120px;
-            min-width: 120px;
-            background-color: var(--img-bg);
+        /* La barra compacta principal (exactamente como tu captura) */
+        .row-partida {
+            padding: 12px 16px;
             display: flex;
-            flex-direction: column;
             align-items: center;
+            gap: 15px;
             justify-content: space-between;
-            border-right: 1px solid var(--card-border);
-            padding-right: 15px;
-            box-sizing: border-box;
+        }
+
+        .row-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-grow: 1;
+            flex-wrap: wrap;
         }
 
         .row-img {
-            width: 100%;
-            height: 100px;
-            object-fit: contain;
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
             border-radius: 6px;
             background-color: var(--img-bg);
         }
 
-        .row-content {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .row-header-tags {
+        .row-title-area {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            gap: 10px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         .row-title {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             margin: 0;
         }
 
-        .row-footer-meta {
+        .row-meta-inline {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-            border-top: 1px solid var(--card-border);
-            padding-top: 8px;
             gap: 15px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            align-items: center;
+        }
+
+        .row-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            white-space: nowrap;
+        }
+
+        /* Botón de + info compacto (icono o texto) */
+        .row-toggle-btn {
+            background: none;
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .row-toggle-btn:hover {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: var(--accent-color);
         }
 
         .row-discord {
             background-color: var(--discord-bg);
             color: var(--discord-text);
-            padding: 8px 16px;
+            padding: 8px 14px;
             border-radius: 6px;
             text-decoration: none;
             font-family: 'Montserrat', sans-serif;
@@ -526,13 +547,28 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            white-space: nowrap;
             transition: background-color 0.2s, color 0.2s;
         }
 
         .row-discord:hover {
             background-color: var(--discord-hover);
             color: var(--discord-hover-text);
+        }
+
+        /* Panel desplegable oculto por defecto que aparece al dar a + info */
+        .row-expanded-panel {
+            display: none;
+            padding: 16px;
+            border-top: 1px solid var(--card-border);
+            background-color: rgba(0, 0, 0, 0.15);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .row-wrapper.expanded .row-expanded-panel {
+            display: flex;
         }
 
         /* ==========================================
@@ -591,7 +627,7 @@
             padding: 40px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             #contenedor-destacadas {
                 grid-template-columns: 1fr;
             }
@@ -613,26 +649,15 @@
             }
             .row-partida {
                 flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
             }
-            .row-img-container {
+            .row-right {
                 width: 100%;
-                flex-direction: row;
-                border-right: none;
-                border-bottom: 1px solid var(--card-border);
-                padding-right: 0;
-                padding-bottom: 10px;
+                justify-content: space-between;
             }
-            .row-img {
-                width: 80px;
-                height: 80px;
-            }
-            .row-footer-meta {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-            .row-discord {
-                justify-content: center;
+            .row-left {
+                width: 100%;
             }
         }
     </style>
@@ -791,7 +816,6 @@
                         destacada: columnas[11] ? columnas[11].trim().toLowerCase() : "no"
                     };
 
-                    // VALIDACIÓN POR FECHA (Columna J)
                     if (!partida.publicarEn) continue;
                     const fechaPublicacion = parsearFechaEspanola(partida.publicarEn);
                     if (!fechaPublicacion) continue;
@@ -1000,12 +1024,12 @@
                 tituloDestacadas.style.display = "none";
             }
 
-            // 2. RENDERIZAR BLOQUE RESTO DE PARTIDAS (Lista con todos los datos y + info)
+            // 2. RENDERIZAR BLOQUE RESTO DE PARTIDAS (Barra horizontal compacta con + info desplegable)
             if (restantes.length > 0) {
                 tituloLista.style.display = "flex";
                 restantes.forEach(partida => {
-                    const fila = document.createElement("div");
-                    fila.className = "row-partida";
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "row-wrapper";
 
                     const esClaro = document.body.classList.contains("light-mode");
                     const claseCalendario = esClaro ? "fa-solid fa-calendar calendar-icon" : "fa-regular fa-calendar calendar-icon";
@@ -1031,51 +1055,40 @@
                         });
                     }
 
-                    fila.innerHTML = `
-                        <div class="row-img-container">
-                            ${partida.portada ? `<img src="${partida.portada}" alt="${partida.titulo}" class="row-img" onerror="this.style.display='none'">` : '<div class="row-img" style="display:none;"></div>'}
-                            ${renderEstrellas(partida.valoracionDJ)}
-                        </div>
-                        <div class="row-content">
-                            <div class="row-header-tags">
-                                <h4 class="row-title">${partida.titulo}</h4>
-                                <div class="genre-tags-wrapper">${htmlGeneros}</div>
-                                ${partida.linea ? `<span class="system-tag">${partida.linea}</span>` : ''}
-                            </div>
-                            <div class="desc-container">
-                                <p class="desc-text">${partida.descripcion}</p>
-                                <button class="btn-toggle-desc">+ info</button>
-                            </div>
-                            ${partida.aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
-                            <div class="row-footer-meta">
-                                <div class="meta" style="border-top:none; padding-top:0; margin-bottom:0; flex-grow:1;">
-                                    <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
+                    wrapper.innerHTML = `
+                        <div class="row-partida">
+                            <div class="row-left">
+                                ${partida.portada ? `<img src="${partida.portada}" alt="${partida.titulo}" class="row-img" onerror="this.style.display='none'">` : ''}
+                                <div class="row-title-area">
+                                    <h4 class="row-title">${partida.titulo}</h4>
+                                    ${partida.linea ? `<span class="system-tag">${partida.linea}</span>` : ''}
+                                    <div class="genre-tags-wrapper">${htmlGeneros}</div>
+                                </div>
+                                <div class="row-meta-inline">
+                                    ${renderEstrellas(partida.valoracionDJ)}
+                                    <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jug.' : 'Plazas abiertas'}</span>
                                     <span><i class="${claseCalendario}"></i> ${textoSesiones}</span>
                                 </div>
+                            </div>
+                            <div class="row-right">
+                                <button class="row-toggle-btn"><i class="fa-solid fa-circle-info"></i> + info</button>
                                 ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="row-discord">Discord <i class="fa-brands fa-discord"></i></a>` : ''}
                             </div>
                         </div>
+                        <div class="row-expanded-panel">
+                            ${partida.descripcion ? `<p style="margin:0;"><strong>Sinopsis:</strong> ${partida.descripcion}</p>` : ''}
+                            ${partida.aviso ? `<div class="aviso" style="margin-bottom:0;"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
+                        </div>
                     `;
 
-                    setTimeout(() => {
-                        const descText = fila.querySelector('.desc-text');
-                        const btnToggle = fila.querySelector('.btn-toggle-desc');
-                        if (descText && btnToggle) {
-                            if (descText.scrollHeight > descText.clientHeight + 4) {
-                                btnToggle.style.display = "inline-block";
-                            }
-                        }
-                    }, 100);
+                    const btnToggle = wrapper.querySelector('.row-toggle-btn');
+                    btnToggle.addEventListener('click', () => {
+                        wrapper.classList.toggle('expanded');
+                        const estaExpandido = wrapper.classList.contains('expanded');
+                        btnToggle.innerHTML = estaExpandido ? '<i class="fa-solid fa-circle-info"></i> - ver menos' : '<i class="fa-solid fa-circle-info"></i> + info';
+                    });
 
-                    const btnToggle = fila.querySelector('.btn-toggle-desc');
-                    if (btnToggle) {
-                        btnToggle.addEventListener('click', () => {
-                            fila.classList.toggle('expanded');
-                            btnToggle.textContent = fila.classList.contains('expanded') ? "- ver menos" : "+ info";
-                        });
-                    }
-
-                    contLista.appendChild(fila);
+                    contLista.appendChild(wrapper);
                 });
             } else {
                 tituloLista.style.display = "none";
