@@ -366,7 +366,7 @@
             margin: 0 0 4px 0;
         }
 
-        .card-partida.expanded .desc-text {
+        .card-partida.expanded .desc-text, .row-partida.expanded .desc-text {
             display: block;
             -webkit-line-clamp: unset;
         }
@@ -435,23 +435,23 @@
         }
 
         /* ==========================================
-           BLOQUE 2: LISTA COMPACTA (RESTO DE PARTIDAS)
+           BLOQUE 2: LISTA COMPACTA (RESTO DE PARTIDAS) CON TODOS LOS DATOS Y + INFO
            ========================================== */
         #contenedor-lista {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
         }
 
         .row-partida {
             background-color: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 12px 16px;
+            border-radius: 10px;
+            padding: 16px;
             display: flex;
-            align-items: center;
+            flex-direction: row;
             gap: 20px;
             transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -462,46 +462,62 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
+        .row-img-container {
+            width: 120px;
+            min-width: 120px;
+            background-color: var(--img-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            border-right: 1px solid var(--card-border);
+            padding-right: 15px;
+            box-sizing: border-box;
+        }
+
         .row-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
+            width: 100%;
+            height: 100px;
+            object-fit: contain;
             border-radius: 6px;
             background-color: var(--img-bg);
         }
 
-        .row-main-info {
+        .row-content {
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 6px;
         }
 
-        .row-title-row {
+        .row-header-tags {
             display: flex;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            gap: 10px;
         }
 
         .row-title {
             font-family: 'Montserrat', sans-serif;
             font-weight: 700;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
             margin: 0;
         }
 
-        .row-meta-group {
+        .row-footer-meta {
             display: flex;
-            gap: 20px;
-            font-size: 0.82rem;
-            color: var(--text-muted);
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            border-top: 1px solid var(--card-border);
+            padding-top: 8px;
+            gap: 15px;
         }
 
         .row-discord {
             background-color: var(--discord-bg);
             color: var(--discord-text);
-            padding: 8px 14px;
+            padding: 8px 16px;
             border-radius: 6px;
             text-decoration: none;
             font-family: 'Montserrat', sans-serif;
@@ -597,15 +613,25 @@
             }
             .row-partida {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
             }
-            .row-meta-group {
+            .row-img-container {
+                width: 100%;
+                flex-direction: row;
+                border-right: none;
+                border-bottom: 1px solid var(--card-border);
+                padding-right: 0;
+                padding-bottom: 10px;
+            }
+            .row-img {
+                width: 80px;
+                height: 80px;
+            }
+            .row-footer-meta {
                 flex-direction: column;
-                gap: 4px;
+                align-items: stretch;
+                gap: 10px;
             }
             .row-discord {
-                width: 100%;
                 justify-content: center;
             }
         }
@@ -762,7 +788,7 @@
                         linkDiscord: columnas[8] || "",
                         publicarEn: columnas[9] ? columnas[9].trim() : "",
                         valoracionDJ: columnas[10] ? columnas[10].trim() : "",
-                        destacada: columnas[11] ? columnas[11].trim().toLowerCase() : "no" // Columna L ("Destacadas")
+                        destacada: columnas[11] ? columnas[11].trim().toLowerCase() : "no"
                     };
 
                     // VALIDACIÓN POR FECHA (Columna J)
@@ -888,11 +914,10 @@
 
             mensajeVacio.style.display = "none";
 
-            // Separar destacadas de las restantes
             const destacadas = filtradas.filter(p => p.destacada === "sí" || p.destacada === "si");
             const restantes = filtradas.filter(p => p.destacada !== "sí" && p.destacada !== "si");
 
-            // 1. RENDERIZAR BLOQUE DESTACADAS (Tarjetas grandes)
+            // 1. RENDERIZAR BLOQUE DESTACADAS
             if (destacadas.length > 0) {
                 tituloDestacadas.style.display = "flex";
                 destacadas.forEach(partida => {
@@ -965,11 +990,7 @@
                     if (btnToggle) {
                         btnToggle.addEventListener('click', () => {
                             tarjeta.classList.toggle('expanded');
-                            if (tarjeta.classList.contains('expanded')) {
-                                btnToggle.textContent = "- ver menos";
-                            } else {
-                                btnToggle.textContent = "+ info";
-                            }
+                            btnToggle.textContent = tarjeta.classList.contains('expanded') ? "- ver menos" : "+ info";
                         });
                     }
 
@@ -979,7 +1000,7 @@
                 tituloDestacadas.style.display = "none";
             }
 
-            // 2. RENDERIZAR BLOQUE RESTO DE PARTIDAS (Lista compacta)
+            // 2. RENDERIZAR BLOQUE RESTO DE PARTIDAS (Lista con todos los datos y + info)
             if (restantes.length > 0) {
                 tituloLista.style.display = "flex";
                 restantes.forEach(partida => {
@@ -998,20 +1019,61 @@
                         textoSesiones = "One-Shot";
                     }
 
+                    let htmlGeneros = '';
+                    if (partida.genero) {
+                        const generosArray = partida.genero.split(/[\s,]+/);
+                        generosArray.forEach(g => {
+                            if(g.trim()) {
+                                let tag = g.trim();
+                                if(!tag.startsWith('#')) tag = '#' + tag;
+                                htmlGeneros += `<span class="genre-tag">${tag}</span>`;
+                            }
+                        });
+                    }
+
                     fila.innerHTML = `
-                        ${partida.portada ? `<img src="${partida.portada}" alt="${partida.titulo}" class="row-img" onerror="this.style.display='none'">` : '<div class="row-img" style="display:none;"></div>'}
-                        <div class="row-main-info">
-                            <div class="row-title-row">
+                        <div class="row-img-container">
+                            ${partida.portada ? `<img src="${partida.portada}" alt="${partida.titulo}" class="row-img" onerror="this.style.display='none'">` : '<div class="row-img" style="display:none;"></div>'}
+                            ${renderEstrellas(partida.valoracionDJ)}
+                        </div>
+                        <div class="row-content">
+                            <div class="row-header-tags">
                                 <h4 class="row-title">${partida.titulo}</h4>
+                                <div class="genre-tags-wrapper">${htmlGeneros}</div>
                                 ${partida.linea ? `<span class="system-tag">${partida.linea}</span>` : ''}
                             </div>
-                            <div class="row-meta-group">
-                                <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
-                                <span><i class="${claseCalendario}"></i> ${textoSesiones}</span>
+                            <div class="desc-container">
+                                <p class="desc-text">${partida.descripcion}</p>
+                                <button class="btn-toggle-desc">+ info</button>
+                            </div>
+                            ${partida.aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
+                            <div class="row-footer-meta">
+                                <div class="meta" style="border-top:none; padding-top:0; margin-bottom:0; flex-grow:1;">
+                                    <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
+                                    <span><i class="${claseCalendario}"></i> ${textoSesiones}</span>
+                                </div>
+                                ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="row-discord">Discord <i class="fa-brands fa-discord"></i></a>` : ''}
                             </div>
                         </div>
-                        ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="row-discord">Discord <i class="fa-brands fa-discord"></i></a>` : ''}
                     `;
+
+                    setTimeout(() => {
+                        const descText = fila.querySelector('.desc-text');
+                        const btnToggle = fila.querySelector('.btn-toggle-desc');
+                        if (descText && btnToggle) {
+                            if (descText.scrollHeight > descText.clientHeight + 4) {
+                                btnToggle.style.display = "inline-block";
+                            }
+                        }
+                    }, 100);
+
+                    const btnToggle = fila.querySelector('.btn-toggle-desc');
+                    if (btnToggle) {
+                        btnToggle.addEventListener('click', () => {
+                            fila.classList.toggle('expanded');
+                            btnToggle.textContent = fila.classList.contains('expanded') ? "- ver menos" : "+ info";
+                        });
+                    }
 
                     contLista.appendChild(fila);
                 });
@@ -1042,7 +1104,6 @@
 
         document.getElementById("search-input").addEventListener("input", filtrarYRenderizar);
 
-        // Botón de limpieza (escoba)
         document.getElementById("btn-clear-filters").addEventListener("click", () => {
             document.getElementById("search-input").value = "";
             lineaSeleccionada = "TODAS";
