@@ -33,7 +33,6 @@
             --discord-hover: #778da9;
             --discord-text: #fb8500;
             --discord-hover-text: #ffffff;
-            --star-color: #ffb703; /* Color dorado para las estrellas */
         }
 
         body.light-mode {
@@ -57,7 +56,6 @@
             --discord-hover: #6096ba;
             --discord-text: #ffffff;
             --discord-hover-text: #ffffff;
-            --star-color: #fb8500; /* Naranja/dorado cálido para modo claro */
         }
 
         body {
@@ -103,7 +101,7 @@
         }
 
         /* ==========================================
-           CONTROLES DE FILTRADO, BUSCADOR Y TAGS
+           CONTROLES DE FILTRADO, BUSCADOR Y DESPLEGABLES
            ========================================== */
         .controls-container {
             max-width: 1200px;
@@ -119,7 +117,12 @@
             align-items: center;
         }
 
-        .search-input {
+        .select-filters-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-input, select.search-input {
             flex-grow: 1;
             padding: 12px 16px;
             border-radius: 8px;
@@ -129,14 +132,14 @@
             font-size: 1rem;
             box-sizing: border-box;
             transition: border-color 0.3s;
+            cursor: pointer;
         }
 
-        .search-input:focus {
+        .search-input:focus, select.search-input:focus {
             outline: none;
             border-color: var(--accent-color);
         }
 
-        /* Botón de limpiar filtros con escoba */
         .btn-clear {
             background-color: var(--card-bg);
             border: 2px solid var(--card-border);
@@ -155,54 +158,6 @@
             background-color: var(--accent-color);
             color: #ffffff;
             border-color: var(--accent-color);
-        }
-
-        .filter-buttons, .tag-buttons-container {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-color);
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .filter-btn:hover {
-            border-color: var(--accent-color);
-        }
-
-        .filter-btn.active {
-            background-color: var(--accent-color);
-            color: #ffffff;
-            border-color: var(--accent-color);
-        }
-
-        /* Botón especial #tag */
-        .filter-btn.tag-toggle-btn {
-            background-color: var(--card-border);
-            color: #ffffff;
-        }
-
-        /* Contenedor secundario para los botones de tags (inicialmente oculto) */
-        .tag-buttons-container {
-            display: none;
-            background-color: var(--card-bg);
-            padding: 10px;
-            border: 1px dashed var(--card-border);
-            border-radius: 8px;
-            margin-top: -5px;
-        }
-
-        .tag-buttons-container.show {
-            display: flex;
         }
 
         .counter-results {
@@ -241,7 +196,7 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
-        /* Columna izquierda: Portada + Estrellas de valoración debajo */
+        /* Columna izquierda: Solo la portada */
         .card-img-container {
             width: 190px;
             min-width: 190px;
@@ -249,7 +204,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             border-right: 1px solid var(--card-border);
             transition: background-color 0.3s;
             padding: 10px;
@@ -276,17 +231,6 @@
             transform: scale(1.03);
         }
 
-        /* Sistema de estrellas bajo la portada */
-        .dj-rating {
-            display: flex;
-            gap: 2px;
-            font-size: 0.85rem;
-            color: var(--star-color);
-            margin-top: 8px;
-            align-items: center;
-            justify-content: center;
-        }
-
         .card-body {
             padding: 16px;
             display: flex;
@@ -302,7 +246,6 @@
             letter-spacing: -0.2px;
         }
 
-        /* Cabecera de tags: géneros a la izquierda, sistema arriba a la derecha */
         .header-tags {
             display: flex;
             align-items: center;
@@ -398,7 +341,6 @@
             padding-top: 10px;
         }
 
-        /* Enlace de Discord adaptable */
         .discord-link {
             display: flex;
             align-items: center;
@@ -500,6 +442,9 @@
                 width: 140px;
                 height: 140px;
             }
+            .select-filters-row {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -516,10 +461,11 @@
             <input type="text" id="search-input" class="search-input" placeholder="🔍 Buscar por nombre, sistema, género...">
             <button id="btn-clear-filters" class="btn-clear" title="Limpiar filtros y búsqueda"><i class="fa-solid fa-broom"></i></button>
         </div>
-        <!-- Botones de sistemas y el botón #tag -->
-        <div id="filter-buttons" class="filter-buttons"></div>
-        <!-- Contenedor desplegable para los botones de tags -->
-        <div id="tag-buttons-container" class="tag-buttons-container"></div>
+        <!-- Listas desplegables para sistemas y tags -->
+        <div class="select-filters-row">
+            <select id="linea-select" class="search-input"></select>
+            <select id="tag-select" class="search-input"></select>
+        </div>
         <div id="counter-results" class="counter-results">Cargando...</div>
     </div>
 
@@ -531,11 +477,8 @@
 
     <!-- BOTONES FLOTANTES INFERIORES ORDENADOS -->
     <div class="floating-btn-container">
-        <!-- 1. Botón de cambio de tema arriba -->
         <button class="floating-action-btn theme-toggle-btn" title="Cambiar modo claro/oscuro"><i class="fa-solid fa-moon"></i></button>
-        <!-- 2. Botón de Home en medio -->
         <a href="index.html" class="floating-action-btn" title="Volver al Inicio"><i class="fa-solid fa-house"></i></a>
-        <!-- 3. Botón de Subir Arriba abajo -->
         <button id="scrollTopBtn" class="scroll-top-btn" onclick="scrollToTop()" title="Subir arriba"><i class="fa-solid fa-arrow-up"></i></button>
     </div>
 
@@ -583,7 +526,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Función para parsear fecha española DD-MM-YYYY
         function parsearFechaEspanola(textoFecha) {
             if (!textoFecha) return null;
             const partes = textoFecha.trim().split(/[-/]/);
@@ -595,30 +537,6 @@
             
             const fecha = new Date(anio, mes, dia);
             return isNaN(fecha.getTime()) ? null : fecha;
-        }
-
-        // Función para generar las estrellas de FontAwesome a partir de un número (ej: 4.5)
-        function renderEstrellas(notaTexto) {
-            if (!notaTexto) return '';
-            const nota = parseFloat(notaTexto.replace(',', '.'));
-            if (isNaN(nota) || nota <= 0) return '';
-
-            let html = '<div class="dj-rating" title="Valoración del Director: ' + nota + '">';
-            let completas = Math.floor(nota);
-            let media = (nota % 1) >= 0.5 ? true : false;
-            let vacias = 5 - completas - (media ? 1 : 0);
-
-            for (let i = 0; i < completas; i++) {
-                html += '<i class="fa-solid fa-star"></i>';
-            }
-            if (media) {
-                html += '<i class="fa-solid fa-star-half-stroke"></i>';
-            }
-            for (let i = 0; i < vacias; i++) {
-                html += '<i class="fa-regular fa-star"></i>';
-            }
-            html += '</div>';
-            return html;
         }
 
         let listaPartidas = [];
@@ -651,11 +569,9 @@
                         jugadores: columnas[6] || "",
                         sesiones: columnas[7] || "",
                         linkDiscord: columnas[8] || "",
-                        publicarEn: columnas[9] ? columnas[9].trim() : "",
-                        valoracionDJ: columnas[10] ? columnas[10].trim() : "" // Columna K para la nota del DJ
+                        publicarEn: columnas[9] ? columnas[9].trim() : ""
                     };
 
-                    // VALIDACIÓN POR FECHA (Columna J - Formato DD-MM-AAAA)
                     if (!partida.publicarEn) continue;
                     const fechaPublicacion = parsearFechaEspanola(partida.publicarEn);
                     if (!fechaPublicacion) continue;
@@ -682,7 +598,7 @@
                     return 0;
                 });
 
-                generarBotonesFiltros();
+                generarListasDesplegables();
                 renderizarPartidas(listaPartidas);
 
             } catch (error) {
@@ -692,13 +608,12 @@
             }
         }
 
-        function generarBotonesFiltros() {
-            const contenedorBotones = document.getElementById("filter-buttons");
-            const contenedorTags = document.getElementById("tag-buttons-container");
+        function generarListasDesplegables() {
+            const selectLinea = document.getElementById("linea-select");
+            const selectTag = document.getElementById("tag-select");
             
             const lineasUnicas = [...new Set(listaPartidas.map(p => p.linea).filter(l => l !== ""))];
             
-            // Extraer todos los tags únicos de la columna género (separados por espacios o hashtags)
             let todosLosTags = [];
             listaPartidas.forEach(p => {
                 if (p.genero) {
@@ -714,47 +629,29 @@
             });
             const tagsUnicos = [...new Set(todosLosTags)];
 
-            // 1. HTML de botones de sistema + botón #tag al final
-            let htmlBotones = `<button class="filter-btn active" data-linea="TODAS">Todas</button>`;
+            let htmlLineas = `<option value="TODAS">Todos los sistemas</option>`;
             lineasUnicas.forEach(linea => {
-                htmlBotones += `<button class="filter-btn" data-linea="${linea}">${linea}</button>`;
+                htmlLineas += `<option value="${linea}">${linea}</option>`;
             });
-            htmlBotones += `<button class="filter-btn tag-toggle-btn" id="btn-toggle-tags"><i class="fa-solid fa-tags"></i> #tag</button>`;
-            contenedorBotones.innerHTML = htmlBotones;
+            selectLinea.innerHTML = htmlLineas;
+            selectLinea.value = lineaSeleccionada;
 
-            // 2. HTML de los botones de tags para la sub-caja
-            let htmlTags = `<button class="filter-btn tag-filter-btn active" data-tag="TODOS">Todos los tags</button>`;
+            let htmlTags = `<option value="TODOS">Todos los tags</option>`;
             tagsUnicos.forEach(tag => {
-                htmlTags += `<button class="filter-btn tag-filter-btn" data-tag="${tag}">${tag}</button>`;
+                htmlTags += `<option value="${tag}">${tag}</option>`;
             });
-            contenedorTags.innerHTML = htmlTags;
+            selectTag.innerHTML = htmlTags;
+            selectTag.value = tagSeleccionado;
 
-            // Evento para abrir/cerrar la botonera de tags
-            document.getElementById("btn-toggle-tags").addEventListener("click", () => {
-                contenedorTags.classList.toggle("show");
-            });
+            selectLinea.onchange = (e) => {
+                lineaSeleccionada = e.target.value;
+                filtrarYRenderizar();
+            };
 
-            // Eventos de clic en botones de sistema
-            const botonesSistema = contenedorBotones.querySelectorAll(".filter-btn:not(#btn-toggle-tags)");
-            botonesSistema.forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    botonesSistema.forEach(b => b.classList.remove("active"));
-                    e.target.classList.add("active");
-                    lineaSeleccionada = e.target.getAttribute("data-linea");
-                    filtrarYRenderizar();
-                });
-            });
-
-            // Eventos de clic en botones de tags
-            const botonesTags = contenedorTags.querySelectorAll(".tag-filter-btn");
-            botonesTags.forEach(btn => {
-                btn.addEventListener("click", (e) => {
-                    botonesTags.forEach(b => b.classList.remove("active"));
-                    e.target.classList.add("active");
-                    tagSeleccionado = e.target.getAttribute("data-tag");
-                    filtrarYRenderizar();
-                });
-            });
+            selectTag.onchange = (e) => {
+                tagSeleccionado = e.target.value;
+                filtrarYRenderizar();
+            };
         }
 
         function renderizarPartidas(partidasAMostrar) {
@@ -791,7 +688,6 @@
                     textoSesiones = "One-Shot";
                 }
 
-                // Generar los spans para los géneros/tags de la tarjeta
                 let htmlGeneros = '';
                 if (partida.genero) {
                     const generosArray = partida.genero.split(/[\s,]+/);
@@ -809,7 +705,6 @@
                         <div class="card-img-wrapper">
                             ${partida.portada ? `<img src="${partida.portada}" alt="${partida.titulo}" class="card-img" onerror="this.parentElement.parentElement.style.display='none'">` : ''}
                         </div>
-                        ${renderEstrellas(partida.valoracionDJ)}
                     </div>
                     <div class="card-body">
                         <h3>${partida.titulo}</h3>
@@ -864,7 +759,6 @@
             const filtradas = listaPartidas.filter(partida => {
                 const coincideLinea = (lineaSeleccionada === "TODAS" || partida.linea === lineaSeleccionada);
                 
-                // Comprobar si coincide con el tag seleccionado
                 let coincideTag = true;
                 if (tagSeleccionado !== "TODOS") {
                     coincideTag = partida.genero && partida.genero.toLowerCase().includes(tagSeleccionado.toLowerCase());
@@ -879,26 +773,15 @@
             renderizarPartidas(filtradas);
         }
 
-        // Evento del buscador en tiempo real
         document.getElementById("search-input").addEventListener("input", filtrarYRenderizar);
 
-        // Evento del botón de limpieza (escoba)
         document.getElementById("btn-clear-filters").addEventListener("click", () => {
             document.getElementById("search-input").value = "";
             lineaSeleccionada = "TODAS";
             tagSeleccionado = "TODOS";
             
-            // Restablecer botones activos visualmente
-            document.querySelectorAll("#filter-buttons .filter-btn").forEach(b => b.classList.remove("active"));
-            const btnTodas = document.querySelector("#filter-buttons [data-linea='TODAS']");
-            if (btnTodas) btnTodas.classList.add("active");
-
-            document.querySelectorAll(".tag-filter-btn").forEach(b => b.classList.remove("active"));
-            const btnTodosTags = document.querySelector(".tag-filter-btn[data-tag='TODOS']");
-            if (btnTodosTags) btnTodosTags.classList.add("active");
-
-            // Ocultar la botonera de tags al limpiar
-            document.getElementById("tag-buttons-container").classList.remove("show");
+            document.getElementById("linea-select").value = "TODAS";
+            document.getElementById("tag-select").value = "TODOS";
 
             renderizarPartidas(listaPartidas);
         });
