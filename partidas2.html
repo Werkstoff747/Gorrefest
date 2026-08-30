@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Partidas - Gorre</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/gorre.ico">
+    <!-- Google Fonts: Montserrat & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome para los iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Modo Oscuro */
+            --bg-color: #0d1b2a;
+            --card-bg: #1b263b;
+            --card-border: #415a77;
+            --text-color: #e0e1dd;
+            --text-muted: #778da9;
+            --accent-color: #415a77;
+            --accent-hover: #778da9;
+            --header-bg: #415a77;
+            --header-border: #415a77;
+            --header-text: #ffffff;
+            --logo-filter: invert(1) brightness(1.8);
+            --img-bg: #0d1b2a;
+            --warning-bg: rgba(224, 225, 221, 0.08);
+            --warning-text: #8b8c89;
+            --tag-bg: #0d1b2a;
+            --discord-bg: var(--accent-color);
+            --discord-hover: #778da9;
+            --discord-text: #fb8500;
+            --discord-hover-text: #ffffff;
+            --star-color: #ffb703;
+        }
+
+        body.light-mode {
+            /* Modo Claro */
+            --bg-color: #e7ecef;
+            --card-bg: #ffffff;
+            --card-border: #6096ba;
+            --text-color: #274c77;
+            --text-muted: #8b8c89;
+            --accent-color: #274c77;
+            --accent-hover: #6096ba;
+            --header-bg: #8ecae6;
+            --header-border: #6096ba;
+            --header-text: #023047;
+            --logo-filter: none;
+            --img-bg: #f8f9fa;
+            --warning-bg: #f1f3f5;
+            --warning-text: #8b8c89;
+            --tag-bg: #d7e3fc;
+            --discord-bg: #274c77;
+            --discord-hover: #6096ba;
+            --discord-text: #ffffff;
+            --discord-hover-text: #ffffff;
+            --star-color: #fb8500;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            background: var(--header-bg);
+            border: 2px solid var(--header-border);
+            border-radius: 12px;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .logo-header {
+            height: 50px;
+            width: auto;
+            margin-bottom: 15px;
+            filter: var(--logo-filter);
+            transition: filter 0.3s;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            margin: 0;
+            font-size: 1.6rem;
+            letter-spacing: 0.5px;
+            color: var(--header-text);
+        }
+
+        /* ==========================================
+           CONTROLES DE FILTRADO, BUSCADOR Y TAGS
+           ========================================== */
+        .controls-container {
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .search-filter-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 2px solid var(--card-border);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .btn-clear {
+            background-color: var(--card-bg);
+            border: 2px solid var(--card-border);
+            color: var(--text-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-clear:hover {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: var(--accent-color);
+        }
+
+        .filter-buttons, .tag-buttons-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent-color);
+        }
+
+        .filter-btn.active {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: var(--accent-color);
+        }
+
+        .filter-btn.tag-toggle-btn {
+            background-color: var(--card-border);
+            color: #ffffff;
+        }
+
+        .tag-buttons-container {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 10px;
+            border: 1px dashed var(--card-border);
+            border-radius: 8px;
+            margin-top: -5px;
+        }
+
+        .tag-buttons-container.show {
+            display: flex;
+        }
+
+        .counter-results {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: -5px;
+            margin-bottom: 5px;
+            padding-left: 2px;
+        }
+
+        /* ==========================================
+           TÍTULOS DE SECCIÓN
+           ========================================== */
+        .section-title {
+            max-width: 1200px;
+            margin: 30px auto 15px auto;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 8px;
+        }
+
+        /* ==========================================
+           BLOQUE 1: TARJETAS DESTACADAS (2 COLUMNAS)
+           ========================================== */
+        #contenedor-destacadas {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .card-partida {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: row; 
+            transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.06);
+        }
+
+        .card-partida:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-img-container {
+            width: 190px;
+            min-width: 190px;
+            background-color: var(--img-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            border-right: 1px solid var(--card-border);
+            transition: background-color 0.3s;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .card-img-wrapper {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .card-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+        .card-img:hover {
+            transform: scale(1.03);
+        }
+
+        .dj-rating {
+            display: flex;
+            gap: 2px;
+            font-size: 0.85rem;
+            color: var(--star-color);
+            margin-top: 8px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-body h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            font-size: 1.2rem;
+            letter-spacing: -0.2px;
+        }
+
+        .header-tags {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 10px;
+        }
+
+        .genre-tags-wrapper {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            flex-grow: 1;
+        }
+
+        .genre-tag {
+            font-size: 0.75rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            background-color: var(--tag-bg);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .system-tag {
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background-color: var(--accent-color);
+            color: #ffffff;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .desc-container {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            flex-grow: 1;
+        }
+
+        .desc-text {
+            display: -webkit-box;
+            -webkit-line-clamp: 5;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0 0 4px 0;
+        }
+
+        .card-partida.expanded .desc-text {
+            display: block;
+            -webkit-line-clamp: unset;
+        }
+
+        .btn-toggle-desc {
+            background: none;
+            border: none;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+            padding: 0;
+            margin-top: 2px;
+            display: none;
+        }
+
+        .btn-toggle-desc:hover {
+            text-decoration: underline;
+        }
+
+        .aviso {
+            font-size: 0.75rem;
+            color: var(--warning-text);
+            margin-bottom: 12px;
+            background: var(--warning-bg);
+            padding: 5px 8px;
+            border-radius: 4px;
+            border-left: 2px solid var(--warning-text);
+            font-weight: 400;
+            opacity: 0.85;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            border-top: 1px solid var(--card-border);
+            padding-top: 10px;
+        }
+
+        .discord-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--discord-bg);
+            color: var(--discord-text);
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            padding: 10px 16px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            margin-top: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .discord-link:hover {
+            background-color: var(--discord-hover);
+            color: var(--discord-hover-text);
+            text-decoration: none;
+        }
+
+        /* ==========================================
+           BLOQUE 2: LISTA COMPACTA (RESTO DE PARTIDAS)
+           ========================================== */
+        #contenedor-lista {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .row-partida {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s, background-color 0.3s, border-color 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .row-partida:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .row-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            background-color: var(--img-bg);
+        }
+
+        .row-main-info {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .row-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .row-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin: 0;
+        }
+
+        .row-meta-group {
+            display: flex;
+            gap: 20px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        .row-discord {
+            background-color: var(--discord-bg);
+            color: var(--discord-text);
+            padding: 8px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .row-discord:hover {
+            background-color: var(--discord-hover);
+            color: var(--discord-hover-text);
+        }
+
+        /* ==========================================
+           BOTONES FLOTANTES INFERIORES
+           ========================================== */
+        .floating-btn-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        .floating-action-btn, .scroll-top-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+
+        .floating-action-btn:hover, .scroll-top-btn:hover {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            border-color: var(--accent-color);
+            transform: scale(1.1);
+        }
+
+        .scroll-top-btn {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.2s, background-color 0.2s, color 0.2s;
+        }
+
+        .scroll-top-btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading, .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            padding: 40px;
+        }
+
+        @media (max-width: 768px) {
+            #contenedor-destacadas {
+                grid-template-columns: 1fr;
+            }
+            .card-partida {
+                flex-direction: column;
+            }
+            .card-img-container {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 15px;
+                border-right: none;
+                border-bottom: 1px solid var(--card-border);
+            }
+            .card-img-wrapper {
+                width: 140px;
+                height: 140px;
+            }
+            .row-partida {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .row-meta-group {
+                flex-direction: column;
+                gap: 4px;
+            }
+            .row-discord {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="images/gorre_l.png" alt="Gorre Logo" class="logo-header">
+        <h1>Listado de Partidas</h1>
+    </header>
+
+    <div class="controls-container">
+        <!-- Buscador y Botón de Limpieza con Escoba -->
+        <div class="search-filter-row">
+            <input type="text" id="search-input" class="search-input" placeholder="🔍 Buscar por nombre, sistema, género...">
+            <button id="btn-clear-filters" class="btn-clear" title="Limpiar filtros y búsqueda"><i class="fa-solid fa-broom"></i></button>
+        </div>
+        <!-- Botones de sistemas y el botón #tag -->
+        <div id="filter-buttons" class="filter-buttons"></div>
+        <!-- Contenedor desplegable para los botones de tags -->
+        <div id="tag-buttons-container" class="tag-buttons-container"></div>
+        <div id="counter-results" class="counter-results">Cargando...</div>
+    </div>
+
+    <main>
+        <!-- SECCIÓN 1: DESTACADAS -->
+        <div id="titulo-destacadas" class="section-title" style="display:none;"><i class="fa-solid fa-star"></i> Partidas Destacadas</div>
+        <div id="contenedor-destacadas"></div>
+
+        <!-- SECCIÓN 2: RESTO DE PARTIDAS -->
+        <div id="titulo-lista" class="section-title" style="display:none;"><i class="fa-solid fa-book-open"></i> Resto de Partidas</div>
+        <div id="contenedor-lista"></div>
+
+        <div id="mensaje-vacio" class="no-results" style="display:none;">No se ha encontrado ninguna partida con esos criterios.</div>
+    </main>
+
+    <!-- BOTONES FLOTANTES INFERIORES ORDENADOS -->
+    <div class="floating-btn-container">
+        <button class="floating-action-btn theme-toggle-btn" title="Cambiar modo claro/oscuro"><i class="fa-solid fa-moon"></i></button>
+        <a href="index.html" class="floating-action-btn" title="Volver al Inicio"><i class="fa-solid fa-house"></i></a>
+        <button id="scrollTopBtn" class="scroll-top-btn" onclick="scrollToTop()" title="Subir arriba"><i class="fa-solid fa-arrow-up"></i></button>
+    </div>
+
+    <script>
+        const themeToggleBtns = document.querySelectorAll(".theme-toggle-btn");
+        
+        function actualizarInterfaz() {
+            const esClaro = document.body.classList.contains("light-mode");
+            
+            const iconosCalendario = document.querySelectorAll(".calendar-icon");
+            iconosCalendario.forEach(el => {
+                if (esClaro) {
+                    el.className = "fa-solid fa-calendar calendar-icon";
+                } else {
+                    el.className = "fa-regular fa-calendar calendar-icon";
+                }
+            });
+
+            themeToggleBtns.forEach(btn => {
+                if (esClaro) {
+                    btn.innerHTML = '<i class="fa-regular fa-sun"></i>';
+                } else {
+                    btn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+                }
+            });
+        }
+
+        themeToggleBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.body.classList.toggle("light-mode");
+                actualizarInterfaz();
+            });
+        });
+
+        window.addEventListener("scroll", () => {
+            const scrollTopBtn = document.getElementById("scrollTopBtn");
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.add("show");
+            } else {
+                scrollTopBtn.classList.remove("show");
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function parsearFechaEspanola(textoFecha) {
+            if (!textoFecha) return null;
+            const partes = textoFecha.trim().split(/[-/]/);
+            if (partes.length !== 3) return null;
+            
+            const dia = parseInt(partes[0], 10);
+            const mes = parseInt(partes[1], 10) - 1;
+            const anio = parseInt(partes[2], 10);
+            
+            const fecha = new Date(anio, mes, dia);
+            return isNaN(fecha.getTime()) ? null : fecha;
+        }
+
+        function renderEstrellas(notaTexto) {
+            if (!notaTexto) return '';
+            const nota = parseFloat(notaTexto.replace(',', '.'));
+            if (isNaN(nota) || nota <= 0) return '';
+
+            let html = '<div class="dj-rating" title="Valoración del Director: ' + nota + '">';
+            let completas = Math.floor(nota);
+            let media = (nota % 1) >= 0.5 ? true : false;
+            let vacias = 5 - completas - (media ? 1 : 0);
+
+            for (let i = 0; i < completas; i++) {
+                html += '<i class="fa-solid fa-star"></i>';
+            }
+            if (media) {
+                html += '<i class="fa-solid fa-star-half-stroke"></i>';
+            }
+            for (let i = 0; i < vacias; i++) {
+                html += '<i class="fa-regular fa-star"></i>';
+            }
+            html += '</div>';
+            return html;
+        }
+
+        let listaPartidas = [];
+        let lineaSeleccionada = "TODAS";
+        let tagSeleccionado = "TODOS";
+
+        async function cargarPartidas() {
+            const url = "https://docs.google.com/spreadsheets/d/1hX6Y0wqFcoyBsIQXkgypgogijbrTSqZRJGRw5Lqh9Ek/export?format=tsv";
+            const contenedorDestacadas = document.getElementById("contenedor-destacadas");
+
+            try {
+                const respuesta = await fetch(url);
+                const texto = await respuesta.text();
+                
+                const filas = texto.split("\n");
+                listaPartidas = [];
+
+                for (let i = 1; i < filas.length; i++) {
+                    if (!filas[i].trim()) continue;
+                    
+                    const columnas = filas[i].split("\t");
+                    
+                    const partida = {
+                        titulo: columnas[0] || "",
+                        linea: columnas[1] || "",
+                        genero: columnas[2] || "",
+                        descripcion: columnas[3] || "",
+                        portada: columnas[4] || "",
+                        aviso: columnas[5] || "",
+                        jugadores: columnas[6] || "",
+                        sesiones: columnas[7] || "",
+                        linkDiscord: columnas[8] || "",
+                        publicarEn: columnas[9] ? columnas[9].trim() : "",
+                        valoracionDJ: columnas[10] ? columnas[10].trim() : "",
+                        destacada: columnas[11] ? columnas[11].trim().toLowerCase() : "no" // Columna L ("Destacadas")
+                    };
+
+                    // VALIDACIÓN POR FECHA (Columna J)
+                    if (!partida.publicarEn) continue;
+                    const fechaPublicacion = parsearFechaEspanola(partida.publicarEn);
+                    if (!fechaPublicacion) continue;
+
+                    const hoy = new Date();
+                    fechaPublicacion.setHours(0, 0, 0, 0);
+                    hoy.setHours(0, 0, 0, 0);
+
+                    if (fechaPublicacion > hoy) continue;
+
+                    listaPartidas.push(partida);
+                }
+
+                listaPartidas.sort((a, b) => {
+                    const sistemaA = a.linea.toLowerCase();
+                    const sistemaB = b.linea.toLowerCase();
+                    if (sistemaA < sistemaB) return -1;
+                    if (sistemaA > sistemaB) return 1;
+
+                    const tituloA = a.titulo.toLowerCase();
+                    const tituloB = b.titulo.toLowerCase();
+                    if (tituloA < tituloB) return -1;
+                    if (tituloA > tituloB) return 1;
+                    return 0;
+                });
+
+                generarBotonesFiltros();
+                filtrarYRenderizar();
+
+            } catch (error) {
+                console.error("Error al obtener las partidas:", error);
+                contenedorDestacadas.innerHTML = "<p class='loading'>Hubo un error al cargar las partidas. Revisa la conexión o los permisos del Google Sheet.</p>";
+                document.getElementById("counter-results").textContent = "Error al cargar partidas";
+            }
+        }
+
+        function generarBotonesFiltros() {
+            const contenedorBotones = document.getElementById("filter-buttons");
+            const contenedorTags = document.getElementById("tag-buttons-container");
+            
+            const lineasUnicas = [...new Set(listaPartidas.map(p => p.linea).filter(l => l !== ""))];
+            
+            let todosLosTags = [];
+            listaPartidas.forEach(p => {
+                if (p.genero) {
+                    const tagsPartida = p.genero.match(/#[\wáéíóú]+/g) || p.genero.split(/\s+/);
+                    tagsPartida.forEach(t => {
+                        let tagLimpio = t.trim();
+                        if (tagLimpio) {
+                            if (!tagLimpio.startsWith('#')) tagLimpio = '#' + tagLimpio;
+                            todosLosTags.push(tagLimpio);
+                        }
+                    });
+                }
+            });
+            const tagsUnicos = [...new Set(todosLosTags)];
+
+            let htmlBotones = `<button class="filter-btn active" data-linea="TODAS">Todas</button>`;
+            lineasUnicas.forEach(linea => {
+                htmlBotones += `<button class="filter-btn" data-linea="${linea}">${linea}</button>`;
+            });
+            htmlBotones += `<button class="filter-btn tag-toggle-btn" id="btn-toggle-tags"><i class="fa-solid fa-tags"></i> #tag</button>`;
+            contenedorBotones.innerHTML = htmlBotones;
+
+            let htmlTags = `<button class="filter-btn tag-filter-btn active" data-tag="TODOS">Todos los tags</button>`;
+            tagsUnicos.forEach(tag => {
+                htmlTags += `<button class="filter-btn tag-filter-btn" data-tag="${tag}">${tag}</button>`;
+            });
+            contenedorTags.innerHTML = htmlTags;
+
+            document.getElementById("btn-toggle-tags").addEventListener("click", () => {
+                contenedorTags.classList.toggle("show");
+            });
+
+            const botonesSistema = contenedorBotones.querySelectorAll(".filter-btn:not(#btn-toggle-tags)");
+            botonesSistema.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    botonesSistema.forEach(b => b.classList.remove("active"));
+                    e.target.classList.add("active");
+                    lineaSeleccionada = e.target.getAttribute("data-linea");
+                    filtrarYRenderizar();
+                });
+            });
+
+            const botonesTags = contenedorTags.querySelectorAll(".tag-filter-btn");
+            botonesTags.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    botonesTags.forEach(b => b.classList.remove("active"));
+                    e.target.classList.add("active");
+                    tagSeleccionado = e.target.getAttribute("data-tag");
+                    filtrarYRenderizar();
+                });
+            });
+        }
+
+        function renderizarPartidas(filtradas) {
+            const contDestacadas = document.getElementById("contenedor-destacadas");
+            const contLista = document.getElementById("contenedor-lista");
+            const tituloDestacadas = document.getElementById("titulo-destacadas");
+            const tituloLista = document.getElementById("titulo-lista");
+            const mensajeVacio = document.getElementById("mensaje-vacio");
+            const contadorDiv = document.getElementById("counter-results");
+
+            contDestacadas.innerHTML = "";
+            contLista.innerHTML = "";
+
+            const total = filtradas.length;
+            if (total === 1) {
+                contadorDiv.textContent = "Mostrando 1 partida";
+            } else {
+                contadorDiv.textContent = `Mostrando ${total} partidas`;
+            }
+
+            if (total === 0) {
+                tituloDestacadas.style.display = "none";
+                tituloLista.style.display = "none";
+                mensajeVacio.style.display = "block";
+                return;
+            }
+
+            mensajeVacio.style.display = "none";
+
+            // Separar destacadas de las restantes
+            const destacadas = filtradas.filter(p => p.destacada === "sí" || p.destacada === "si");
+            const restantes = filtradas.filter(p => p.destacada !== "sí" && p.destacada !== "si");
+
+            // 1. RENDERIZAR BLOQUE DESTACADAS (Tarjetas grandes)
+            if (destacadas.length > 0) {
+                tituloDestacadas.style.display = "flex";
+                destacadas.forEach(partida => {
+                    const tarjeta = document.createElement("div");
+                    tarjeta.className = "card-partida";
+                    
+                    const esClaro = document.body.classList.contains("light-mode");
+                    const claseCalendario = esClaro ? "fa-solid fa-calendar calendar-icon" : "fa-regular fa-calendar calendar-icon";
+
+                    let textoSesiones = partida.sesiones.trim();
+                    if (textoSesiones === "1" || textoSesiones.toLowerCase() === "1 sesiones") {
+                        textoSesiones = "One-Shot";
+                    } else if (textoSesiones && !textoSesiones.toLowerCase().includes("sesiones") && !textoSesiones.toLowerCase().includes("one-shot")) {
+                        textoSesiones = textoSesiones + " sesiones";
+                    } else if (!textoSesiones) {
+                        textoSesiones = "One-Shot";
+                    }
+
+                    let htmlGeneros = '';
+                    if (partida.genero) {
+                        const generosArray = partida.genero.split(/[\s,]+/);
+                        generosArray.forEach(g => {
+                            if(g.trim()) {
+                                let tag = g.trim();
+                                if(!tag.startsWith('#')) tag = '#' + tag;
+                                htmlGeneros += `<span class="genre-tag">${tag}</span>`;
+                            }
+                        });
+                    }
+
+                    tarjeta.innerHTML = `
+                        <div class="card-img-container">
+                            <div class="card-img-wrapper">
+                                ${partida.portada ? `<img src="${partida.portada}" alt="${partida.titulo}" class="card-img" onerror="this.parentElement.parentElement.style.display='none'">` : ''}
+                            </div>
+                            ${renderEstrellas(partida.valoracionDJ)}
+                        </div>
+                        <div class="card-body">
+                            <h3>${partida.titulo}</h3>
+                            <div class="header-tags">
+                                <div class="genre-tags-wrapper">
+                                    ${htmlGeneros}
+                                </div>
+                                ${partida.linea ? `<span class="system-tag">${partida.linea}</span>` : ''}
+                            </div>
+                            <div class="desc-container">
+                                <p class="desc-text">${partida.descripcion}</p>
+                                <button class="btn-toggle-desc">+ info</button>
+                            </div>
+                            ${partida.aviso ? `<div class="aviso"><strong>⚠️ Aviso:</strong> ${partida.aviso}</div>` : ''}
+                            <div class="meta">
+                                <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
+                                <span><i class="${claseCalendario}"></i> ${textoSesiones}</span>
+                            </div>
+                            ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="discord-link">Unirse a Discord <i class="fa-brands fa-discord"></i></a>` : ''}
+                        </div>
+                    `;
+
+                    setTimeout(() => {
+                        const descText = tarjeta.querySelector('.desc-text');
+                        const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
+                        if (descText && btnToggle) {
+                            if (descText.scrollHeight > descText.clientHeight + 4) {
+                                btnToggle.style.display = "inline-block";
+                            }
+                        }
+                    }, 100);
+
+                    const btnToggle = tarjeta.querySelector('.btn-toggle-desc');
+                    if (btnToggle) {
+                        btnToggle.addEventListener('click', () => {
+                            tarjeta.classList.toggle('expanded');
+                            if (tarjeta.classList.contains('expanded')) {
+                                btnToggle.textContent = "- ver menos";
+                            } else {
+                                btnToggle.textContent = "+ info";
+                            }
+                        });
+                    }
+
+                    contDestacadas.appendChild(tarjeta);
+                });
+            } else {
+                tituloDestacadas.style.display = "none";
+            }
+
+            // 2. RENDERIZAR BLOQUE RESTO DE PARTIDAS (Lista compacta)
+            if (restantes.length > 0) {
+                tituloLista.style.display = "flex";
+                restantes.forEach(partida => {
+                    const fila = document.createElement("div");
+                    fila.className = "row-partida";
+
+                    const esClaro = document.body.classList.contains("light-mode");
+                    const claseCalendario = esClaro ? "fa-solid fa-calendar calendar-icon" : "fa-regular fa-calendar calendar-icon";
+
+                    let textoSesiones = partida.sesiones.trim();
+                    if (textoSesiones === "1" || textoSesiones.toLowerCase() === "1 sesiones") {
+                        textoSesiones = "One-Shot";
+                    } else if (textoSesiones && !textoSesiones.toLowerCase().includes("sesiones") && !textoSesiones.toLowerCase().includes("one-shot")) {
+                        textoSesiones = textoSesiones + " sesiones";
+                    } else if (!textoSesiones) {
+                        textoSesiones = "One-Shot";
+                    }
+
+                    fila.innerHTML = `
+                        ${partida.portada ? `<img src="${partida.portada}" alt="${partida.titulo}" class="row-img" onerror="this.style.display='none'">` : '<div class="row-img" style="display:none;"></div>'}
+                        <div class="row-main-info">
+                            <div class="row-title-row">
+                                <h4 class="row-title">${partida.titulo}</h4>
+                                ${partida.linea ? `<span class="system-tag">${partida.linea}</span>` : ''}
+                            </div>
+                            <div class="row-meta-group">
+                                <span><i class="fa-solid fa-users"></i> ${partida.jugadores ? partida.jugadores + ' jugadores' : 'Plazas abiertas'}</span>
+                                <span><i class="${claseCalendario}"></i> ${textoSesiones}</span>
+                            </div>
+                        </div>
+                        ${partida.linkDiscord ? `<a href="${partida.linkDiscord}" target="_blank" class="row-discord">Discord <i class="fa-brands fa-discord"></i></a>` : ''}
+                    `;
+
+                    contLista.appendChild(fila);
+                });
+            } else {
+                tituloLista.style.display = "none";
+            }
+        }
+
+        function filtrarYRenderizar() {
+            const textoBusqueda = document.getElementById("search-input").value.toLowerCase().trim();
+
+            const filtradas = listaPartidas.filter(partida => {
+                const coincideLinea = (lineaSeleccionada === "TODAS" || partida.linea === lineaSeleccionada);
+                
+                let coincideTag = true;
+                if (tagSeleccionado !== "TODOS") {
+                    coincideTag = partida.genero && partida.genero.toLowerCase().includes(tagSeleccionado.toLowerCase());
+                }
+
+                const textoCompleto = `${partida.titulo} ${partida.linea} ${partida.genero} ${partida.descripcion}`.toLowerCase();
+                const coincideTexto = textoCompleto.includes(textoBusqueda);
+
+                return coincideLinea && coincideTag && coincideTexto;
+            });
+
+            renderizarPartidas(filtradas);
+        }
+
+        document.getElementById("search-input").addEventListener("input", filtrarYRenderizar);
+
+        // Botón de limpieza (escoba)
+        document.getElementById("btn-clear-filters").addEventListener("click", () => {
+            document.getElementById("search-input").value = "";
+            lineaSeleccionada = "TODAS";
+            tagSeleccionado = "TODOS";
+            
+            document.querySelectorAll("#filter-buttons .filter-btn").forEach(b => b.classList.remove("active"));
+            const btnTodas = document.querySelector("#filter-buttons [data-linea='TODAS']");
+            if (btnTodas) btnTodas.classList.add("active");
+
+            document.querySelectorAll(".tag-filter-btn").forEach(b => b.classList.remove("active"));
+            const btnTodosTags = document.querySelector(".tag-filter-btn[data-tag='TODOS']");
+            if (btnTodosTags) btnTodosTags.classList.add("active");
+
+            document.getElementById("tag-buttons-container").classList.remove("show");
+
+            filtrarYRenderizar();
+        });
+
+        cargarPartidas();
+    </script>
+</body>
+</html>
